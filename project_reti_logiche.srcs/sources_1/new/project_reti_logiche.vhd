@@ -108,3 +108,34 @@ begin
         end if;
     end process;
 end RSP;
+
+--Multiplexer
+
+entity Multiplexer is
+    port(S: in bit_vector(1 downto 0); CLOCK: in bit;
+    O0: out bit_vector(7 downto 0);
+    O1: out bit_vector(7 downto 0);
+    O2: out bit_vector(7 downto 0);
+    O3: out bit_vector(7 downto 0);
+    I: in bit_vector(7 downto 0));
+end Multiplexer;
+
+architecture mult4 of Multiplexer is
+begin
+    process(CLOCK)
+        variable REG: bit_vector(7 downto 0);
+    begin
+    if(CLOCK'event and CLOCK = '1') then
+        REG := I;
+        if(S = "00") then
+            O0 <= REG;
+        elsif(S = "01") then
+            O1 <= REG;
+        elsif(S = "10") then
+            O2 <= REG;
+        else
+            O3 <= REG;
+        end if;
+    end if;
+    end process;
+end mult4;
