@@ -232,7 +232,7 @@ begin
     -- delta function = funzione per le transizioni di stato
     delta_function : process(CLOCK, RST)
     begin
-        if (RST='1') then
+        if (RST'event and RST='1') then
             curr_state <= S0;
         elsif (CLOCK'event and CLOCK='1') then
             if (curr_state = S0 and START = '1') then
@@ -247,6 +247,10 @@ begin
                 curr_state <= S5;
             elsif (curr_state = S5) then
                 curr_state <= S0;
+            -- non c'è garanzia che questi casi coprano tutte le configurazioni, servirebbe un
+            -- else do nothing. Dovremmo indagare se è fatto implicitamente o se va in DC.
+            -- altrimente si potrebbe avere un segnale state change fatto tipo:
+            -- (S0*start + S1 + s2 + S3*!start +S4 + S5)*CLK*CLK'event
             end if;
         end if;
     end process;
@@ -281,7 +285,7 @@ begin
             DONE <= '0';
             W_TO_REG <= '0'; -- forse non serve
             MEM_EN <= '1'; -- cambio per interagire con memoria
-        elsif (curr_state = S4) then
+        elsif (curr_state = S4) then --s5??
             -- salvo il dato dalla memoria nei registri d'uscita e li rendo visibili
             DONE <= '1'; -- rendo visibili le uscite
             W_TO_REG <= '0'; -- forse non serve
