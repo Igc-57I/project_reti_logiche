@@ -86,13 +86,97 @@ begin
 		
 end RegPP0;
 
--- x4 registri uscita ... (todo)
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
 
+-- registro uscita (PP) 1
+
+entity Reg_Out_1 is
+	port (D: in std_logic_vector(7 downto 0); CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(7 downto 0));
+end Reg_Out_1;
+
+architecture RegPP1 of Reg_Out_1 is
+begin
+	process(CLOCK) --assegnamento dell'ingresso
+		variable REG: std_logic_vector(7 downto 0);
+	begin
+		if(CLOCK'event and CLOCK = '1') then
+			REG:= D;
+		end if;
+		Q  <= REG;
+	end process;
+
+	process(RST) --reset al valore 0
+	begin
+		if(RST'event and RST = '1') then
+			Q <= (others => '0');
+		end if;
+	end process;
+		
+end RegPP1;
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Registro ingresso RSP
+-- registro uscita (PP) 2
+
+entity Reg_Out_2 is
+	port (D: in std_logic_vector(7 downto 0); CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(7 downto 0));
+end Reg_Out_2;
+
+architecture RegPP2 of Reg_Out_2 is
+begin
+	process(CLOCK) --assegnamento dell'ingresso
+		variable REG: std_logic_vector(7 downto 0);
+	begin
+		if(CLOCK'event and CLOCK = '1') then
+			REG:= D;
+		end if;
+		Q  <= REG;
+	end process;
+
+	process(RST) --reset al valore 0
+	begin
+		if(RST'event and RST = '1') then
+			Q <= (others => '0');
+		end if;
+	end process;
+		
+end RegPP2;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- registro uscita (PP) 3
+
+entity Reg_Out_3 is
+	port (D: in std_logic_vector(7 downto 0); CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(7 downto 0));
+end Reg_Out_3;
+
+architecture RegPP3 of Reg_Out_3 is
+begin
+	process(CLOCK) --assegnamento dell'ingresso
+		variable REG: std_logic_vector(7 downto 0);
+	begin
+		if(CLOCK'event and CLOCK = '1') then
+			REG:= D;
+		end if;
+		Q  <= REG;
+	end process;
+
+	process(RST) --reset al valore 0
+	begin
+		if(RST'event and RST = '1') then
+			Q <= (others => '0');
+		end if;
+	end process;
+		
+end RegPP3;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Registro ingresso SP
 
 entity Reg_In is
     port(D: in std_logic; CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(15 downto 0));
@@ -130,7 +214,7 @@ entity FSM is
         RST: in std_logic; 
         W_TO_REG: out std_logic;
         MEM_EN: out std_logic;
-        A: inout std_logic_vector(1 downto 0);
+        A: inout std_logic_vector(1 downto 0); --bro?
         DONE: out std_logic);
 end FSM;
     
