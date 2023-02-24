@@ -50,7 +50,7 @@ entity project_reti_logiche is
 end project_reti_logiche;
 
 architecture Behavioral of project_reti_logiche is
-
+--TODO: mappare le entity alle porte
 begin
 
 
@@ -247,10 +247,9 @@ begin
                 curr_state <= S5;
             elsif (curr_state = S5) then
                 curr_state <= S0;
-            -- non c'è garanzia che questi casi coprano tutte le configurazioni, servirebbe un
-            -- else do nothing. Dovremmo indagare se è fatto implicitamente o se va in DC.
-            -- altrimente si potrebbe avere un segnale state change fatto tipo:
-            -- (S0*start + S1 + s2 + S3*!start +S4 + S5)*CLK*CLK'event
+            else
+                curr_state <= curr_state;
+            -- aggiunto else
             end if;
         end if;
     end process;
@@ -285,7 +284,7 @@ begin
             DONE <= '0';
             W_TO_REG <= '0'; -- forse non serve
             MEM_EN <= '1'; -- cambio per interagire con memoria
-        elsif (curr_state = S4) then --s5??
+        elsif (curr_state = S5) then --cambiato in s5 (probabile typo)
             -- salvo il dato dalla memoria nei registri d'uscita e li rendo visibili
             DONE <= '1'; -- rendo visibili le uscite
             W_TO_REG <= '0'; -- forse non serve
