@@ -56,16 +56,20 @@ begin
 
 end Behavioral;
 
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
 -- registro uscita (PP) 0
 
 entity Reg_Out_0 is
-	port (D: in bit_vector(7 downto 0); CLOCK: in bit; RST: in bit; Q: out bit_vector(7 downto 0));
+	port (D: in std_logic_vector(7 downto 0); CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(7 downto 0));
 end Reg_Out_0;
 
 architecture RegPP0 of Reg_Out_0 is
 begin
 	process(CLOCK) --assegnamento dell'ingresso
-		variable REG: bit_vector(7 downto 0);
+		variable REG: std_logic_vector(7 downto 0);
 	begin
 		if(CLOCK'event and CLOCK = '1') then
 			REG:= D;
@@ -84,16 +88,20 @@ end RegPP0;
 
 -- x4 registri uscita ... (todo)
 
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
 -- Registro ingresso RSP
 
 entity Reg_In is
-    port(D: in bit; CLOCK: in bit; RST: in bit; Q: out bit_vector(15 downto 0));
+    port(D: in std_logic; CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(15 downto 0));
 end Reg_In;
 
 architecture RSP of Reg_In is
 begin
     process(CLOCK) --scorrimento ed inserimento
-        variable REG: bit_vector(15 downto 0);
+        variable REG: std_logic_vector(15 downto 0);
     begin
         if(CLOCK'event and CLOCK = '1') then
 			REG := REG(14 downto 0) & D;
@@ -109,33 +117,96 @@ begin
     end process;
 end RSP;
 
---Multiplexer
+-- ma che cazzo di senso ha che devo copiare la libreira sopra ogni entity se voglio usare gli std_logic?
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
 
-entity Multiplexer is
-    port(S: in bit_vector(1 downto 0); CLOCK: in bit;
-    O0: out bit_vector(7 downto 0);
-    O1: out bit_vector(7 downto 0);
-    O2: out bit_vector(7 downto 0);
-    O3: out bit_vector(7 downto 0);
-    I: in bit_vector(7 downto 0));
-end Multiplexer;
-
-architecture mult4 of Multiplexer is
+-- fsm
+entity FSM is
+    port(
+        START: in std_logic; 
+        W: in std_logic; 
+        CLOCK: in std_logic; 
+        RST: in std_logic; 
+        W_TO_REG: out std_logic;
+        MEM_EN: out std_logic;
+        A: inout std_logic_vector(1 downto 0);
+        DONE: out std_logic);
+end FSM;
+    
+architecture FSM_arch of FSM is
+    type S is (S0, S1, S2, S3, S4, S5);
+    -- S0 = stato iniziale / reset
+    -- S1 = leggo primo bit
+    -- S2 = leggo secondo bit
+    -- S3 = leggo bit per indirizzo di memoria
+    -- S4 = interazione con memoria
+    -- S5 = visualizzo uscite
+    signal curr_state : S;
 begin
-    process(CLOCK)
-        variable REG: bit_vector(7 downto 0);
+    
+    -- delta function = funzione per le transizioni di stato
+    delta_function : process(CLOCK, RST)
     begin
-    if(CLOCK'event and CLOCK = '1') then
-        REG := I;
-        if(S = "00") then
-            O0 <= REG;
-        elsif(S = "01") then
-            O1 <= REG;
-        elsif(S = "10") then
-            O2 <= REG;
-        else
-            O3 <= REG;
+        if (RST='1') then
+            curr_state <= S0;
+        elsif (CLOCK'event and CLOCK='1') then
+            if (curr_state = S0 and START = '1') then
+                curr_state <= S1;
+            elsif (curr_state = S1) then
+                curr_state <= S2;
+            elsif (curr_state = S2) then
+                curr_state <= S3;
+            elsif (curr_state = S3 and START = '0') then
+                curr_state <= S4;
+            elsif (curr_state = S4) then
+                curr_state <= S5;
+            elsif (curr_state = S5) then
+                curr_state <= S0;
+            end if;
         end if;
-    end if;
     end process;
-end mult4;
+    
+    -- lambda function = funzione per gestire le uscite
+    lambda_function : process(START, W, CLOCK, curr_state)
+    begin
+        if (curr_state = S0) then
+            -- in S0 setto tutte le uscite a zero
+            DONE <= '0';
+            W_TO_REG <= '0'; -- forse questa non serve
+            MEM_EN <= '0';
+        elsif (curr_state = S1) then
+            -- mantengo uscite a 0 tranne A(0) primo bit mux
+            DONE <= '0';
+            W_TO_REG <= '0'; -- forse questa non serve
+            MEM_EN <= '0';
+            A(0) <= W;
+        elsif (curr_state = S2) then
+            -- come sopra ma modifico secondo bit
+            DONE <= '0';
+            W_TO_REG <= '0'; -- forse questa non serve
+            MEM_EN <= '0';
+            A(1) <= W;
+        elsif (curr_state = S3) then
+            -- mando i bit in ingresso al registro usando W_TO_REG
+            DONE <= '0';
+            W_TO_REG <= W; -- poi il registro gestisce come salvarlo
+            MEM_EN <= '0';
+        elsif (curr_state = S4) then
+            -- interagisco con memoria, tengo a 0 le uscite e aspetto 1 ciclo di clock per la risposta
+            DONE <= '0';
+            W_TO_REG <= '0'; -- forse non serve
+            MEM_EN <= '1'; -- cambio per interagire con memoria
+        elsif (curr_state = S4) then
+            -- salvo il dato dalla memoria nei registri d'uscita e li rendo visibili
+            DONE <= '1'; -- rendo visibili le uscite
+            W_TO_REG <= '0'; -- forse non serve
+            MEM_EN <= '1'; -- credo serve = 1 per poter copiare il dato nei registri ma forse va bene a 0
+        end if;
+    end process;
+        
+end FSM_arch;
+
+-- TODO:
+        -- forse aggiungere un altro segnale di sincronizzazione per i registri, per farli lavorare solo quando serve e non a ogni ciclo di clock
+        -- forse aggiungere un input a fsm per il dato dalla memoria invece di mandarlo direttamente nel mux, non so se cambia qualcosa
