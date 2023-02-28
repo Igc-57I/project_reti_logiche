@@ -1,2 +1,2 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_1/new/tb_demux.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'tb_demux'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_1/new/tb_fsm.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'tb_fsm'

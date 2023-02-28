@@ -50,35 +50,6 @@ entity project_reti_logiche is
 end project_reti_logiche;
 
 architecture Behavioral of project_reti_logiche is
-component Reg_Out_0 is
-	port (
-	D: in std_logic_vector(7 downto 0);
-	CLOCK: in std_logic; RST: in std_logic;
-	Q: out std_logic_vector(7 downto 0));
-end component;
-
-component Reg_Out_1 is
-	port (
-	D: in std_logic_vector(7 downto 0); 
-	CLOCK: in std_logic; RST: in std_logic; 
-	Q: out std_logic_vector(7 downto 0));
-end component;
-
-component Reg_Out_2 is
-	port (
-	D: in std_logic_vector(7 downto 0); 
-	CLOCK: in std_logic; 
-	RST: in std_logic; 
-	Q: out std_logic_vector(7 downto 0));
-end component;
-
-component Reg_Out_3 is
-	port (
-	D: in std_logic_vector(7 downto 0); 
-	CLOCK: in std_logic; RST: in std_logic; 
-	Q: out std_logic_vector(7 downto 0));
-end component;
-
  component Reg_In is
     port(
     D: in std_logic; 
@@ -147,114 +118,6 @@ end Behavioral;
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- registro uscita (PP) 0
-
-entity Reg_Out_0 is
-	port (
-	D: in std_logic_vector(7 downto 0); 
-	CLOCK: in std_logic; 
-	RST: in std_logic; 
-	Q: out std_logic_vector(7 downto 0));
-end Reg_Out_0;
-
-architecture RegPP0 of Reg_Out_0 is
-begin
-	process(CLOCK, RST) --assegnamento dell'ingresso
-		variable REG: std_logic_vector(7 downto 0);
-	begin
-    	if(RST'event and RST = '1') then
-			REG := (others => '0');
-		elsif(CLOCK'event and CLOCK = '1') then
-			REG:= D;
-		end if;
-		Q  <= REG;
-	end process;
-end RegPP0;
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
--- registro uscita (PP) 1
-
-entity Reg_Out_1 is
-	port (
-	D: in std_logic_vector(7 downto 0); 
-	CLOCK: in std_logic; 
-	RST: in std_logic; 
-	Q: out std_logic_vector(7 downto 0));
-end Reg_Out_1;
-
-architecture RegPP1 of Reg_Out_1 is
-begin
-	process(CLOCK, RST) --assegnamento dell'ingresso
-		variable REG: std_logic_vector(7 downto 0);
-	begin
-    	if(RST'event and RST = '1') then
-			REG := (others => '0');
-		elsif(CLOCK'event and CLOCK = '1') then
-			REG:= D;
-		end if;
-		Q  <= REG;
-	end process;
-end RegPP1;
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
--- registro uscita (PP) 2
-
-entity Reg_Out_2 is
-	port (
-	D: in std_logic_vector(7 downto 0); 
-	CLOCK: in std_logic; 
-	RST: in std_logic; 
-	Q: out std_logic_vector(7 downto 0));
-end Reg_Out_2;
-
-architecture RegPP2 of Reg_Out_2 is
-begin
-	process(CLOCK, RST) --assegnamento dell'ingresso
-		variable REG: std_logic_vector(7 downto 0);
-	begin
-    	if(RST'event and RST = '1') then
-			REG := (others => '0');
-		elsif(CLOCK'event and CLOCK = '1') then
-			REG:= D;
-		end if;
-		Q  <= REG;
-	end process;
-end RegPP2;
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
--- registro uscita (PP) 3
-
-entity Reg_Out_3 is
-	port (
-	D: in std_logic_vector(7 downto 0); 
-	CLOCK: in std_logic; 
-	RST: in std_logic; 
-	Q: out std_logic_vector(7 downto 0));
-end Reg_Out_3;
-
-architecture RegPP3 of Reg_Out_3 is
-begin
-	process(CLOCK, RST) --assegnamento dell'ingresso
-		variable REG: std_logic_vector(7 downto 0);
-	begin
-    	if(RST'event and RST = '1') then
-			REG := (others => '0');
-		elsif(CLOCK'event and CLOCK = '1') then
-			REG:= D;
-		end if;
-		Q  <= REG;
-	end process;
-end RegPP3;
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
 -- Registro ingresso SP
 
 entity Reg_In is
@@ -294,7 +157,7 @@ entity FSM is
         RST: in std_logic; 
         W_TO_REG: out std_logic;
         MEM_EN: out std_logic;
-        A: out std_logic_vector(1 downto 0); --bro?
+        A: inout std_logic_vector(1 downto 0); --bro?
         DONE: out std_logic);
 end FSM;
     
@@ -342,22 +205,29 @@ begin
             DONE <= '0';
             W_TO_REG <= '0'; -- forse questa non serve
             MEM_EN <= '0';
+            A <= "XX";
         elsif (curr_state = S1) then
             -- mantengo uscite a 0 tranne A(0) primo bit mux
             DONE <= '0';
             W_TO_REG <= '0'; -- forse questa non serve
             MEM_EN <= '0';
-            A(0) <= W;
+            if (CLOCK = '1' and A(0) = 'X') then
+                A(0) <= W;
+            end if;
         elsif (curr_state = S2) then
             -- come sopra ma modifico secondo bit
             DONE <= '0';
             W_TO_REG <= '0'; -- forse questa non serve
             MEM_EN <= '0';
-            A(1) <= W;
+            if (CLOCK = '1' and A(1) = 'X') then
+                A(1) <= W;
+            end if;
         elsif (curr_state = S3) then
             -- mando i bit in ingresso al registro usando W_TO_REG
             DONE <= '0';
-            W_TO_REG <= W; -- poi il registro gestisce come salvarlo
+            if (CLOCK = '1') then
+                W_TO_REG <= W; -- poi il registro gestisce come salvarlo
+            end if;
             MEM_EN <= '0';
         elsif (curr_state = S4) then
             -- interagisco con memoria, tengo a 0 le uscite e aspetto 1 ciclo di clock per la risposta
