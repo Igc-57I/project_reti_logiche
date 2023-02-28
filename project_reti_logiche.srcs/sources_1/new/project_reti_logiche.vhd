@@ -104,6 +104,7 @@ component demux is
         S0: in std_logic;
         S1: in std_logic;
         I: in std_logic_vector(7 downto 0);
+        CLOCK: in std_logic;
         OUT0: out std_logic_vector(7 downto 0);
         OUT1: out std_logic_vector(7 downto 0);
         OUT2: out std_logic_vector(7 downto 0);
@@ -408,6 +409,7 @@ entity demux is
         S0: in std_logic;
         S1: in std_logic;
         I: in std_logic_vector(7 downto 0);
+        CLOCK: in std_logic;
         OUT0: out std_logic_vector(7 downto 0);
         OUT1: out std_logic_vector(7 downto 0);
         OUT2: out std_logic_vector(7 downto 0);
@@ -417,6 +419,18 @@ end demux;
 
 architecture DMX_arc of demux is
     begin
-    -- TODO descrivere l'architettura
+    process(CLOCK)
+    begin
+        if(CLOCK'event and CLOCK = '1') then
+            if (S0 = '0' and S1 = '0') then
+                OUT0 <= I;
+            elsif (S0 = '0' and S1 = '1') then
+                OUT1 <= I;
+            elsif (S0 = '1' and S1 = '0') then
+                OUT2 <= I;
+            elsif (S0 = '1' and S1 = '1') then
+                OUT3 <= I;
+            end if;
+        end if;
     end process;
 end DMX_arc;
