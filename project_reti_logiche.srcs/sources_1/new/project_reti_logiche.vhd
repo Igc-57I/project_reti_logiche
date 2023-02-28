@@ -50,10 +50,96 @@ entity project_reti_logiche is
 end project_reti_logiche;
 
 architecture Behavioral of project_reti_logiche is
+component Reg_Out_0 is
+	port (
+	D: in std_logic_vector(7 downto 0);
+	CLOCK: in std_logic; RST: in std_logic;
+	Q: out std_logic_vector(7 downto 0));
+end component;
+
+component Reg_Out_1 is
+	port (
+	D: in std_logic_vector(7 downto 0); 
+	CLOCK: in std_logic; RST: in std_logic; 
+	Q: out std_logic_vector(7 downto 0));
+end component;
+
+component Reg_Out_2 is
+	port (
+	D: in std_logic_vector(7 downto 0); 
+	CLOCK: in std_logic; 
+	RST: in std_logic; 
+	Q: out std_logic_vector(7 downto 0));
+end component;
+
+component Reg_Out_3 is
+	port (
+	D: in std_logic_vector(7 downto 0); 
+	CLOCK: in std_logic; RST: in std_logic; 
+	Q: out std_logic_vector(7 downto 0));
+end component;
+
+ component Reg_In is
+    port(
+    D: in std_logic; 
+    CLOCK: in std_logic; 
+    RST: in std_logic; 
+    Q: out std_logic_vector(15 downto 0));
+end component;
+
+component FSM is
+    port(
+        START: in std_logic; 
+        W: in std_logic; 
+        CLOCK: in std_logic; 
+        RST: in std_logic; 
+        W_TO_REG: out std_logic;
+        MEM_EN: out std_logic;
+        A: inout std_logic_vector(1 downto 0); --bro?
+        DONE: out std_logic);
+end component;
+
+component demux is
+    port(
+        S0: in std_logic;
+        S1: in std_logic;
+        I: in std_logic_vector(7 downto 0);
+        OUT0: out std_logic_vector(7 downto 0);
+        OUT1: out std_logic_vector(7 downto 0);
+        OUT2: out std_logic_vector(7 downto 0);
+        OUT3: out std_logic_vector(7 downto 0)
+    );
+end component;
+
 --TODO: mappare le entity alle porte
 begin
+Z0: Reg_out_0 port map (
+    --ingresso => D,
+    i_clk => CLOCK,
+    i_rst => RST,
+    o_z0 => Q
+);
 
+Z1: Reg_out_1 port map (
+    --ingresso => D,
+    i_clk => CLOCK,
+    i_rst => RST,
+    o_z0 => Q
+);
 
+Z2: Reg_out_2 port map (
+    --ingresso => D,
+    i_clk => CLOCK,
+    i_rst => RST,
+    o_z0 => Q
+);
+
+Z3: Reg_out_3 port map (
+    --ingresso => D,
+    i_clk => CLOCK,
+    i_rst => RST,
+    o_z0 => Q
+);
 end Behavioral;
 
 
@@ -63,7 +149,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- registro uscita (PP) 0
 
 entity Reg_Out_0 is
-	port (D: in std_logic_vector(7 downto 0); CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(7 downto 0));
+	port (
+	D: in std_logic_vector(7 downto 0); 
+	CLOCK: in std_logic; 
+	RST: in std_logic; 
+	Q: out std_logic_vector(7 downto 0));
 end Reg_Out_0;
 
 architecture RegPP0 of Reg_Out_0 is
@@ -92,7 +182,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- registro uscita (PP) 1
 
 entity Reg_Out_1 is
-	port (D: in std_logic_vector(7 downto 0); CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(7 downto 0));
+	port (
+	D: in std_logic_vector(7 downto 0); 
+	CLOCK: in std_logic; 
+	RST: in std_logic; 
+	Q: out std_logic_vector(7 downto 0));
 end Reg_Out_1;
 
 architecture RegPP1 of Reg_Out_1 is
@@ -121,7 +215,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- registro uscita (PP) 2
 
 entity Reg_Out_2 is
-	port (D: in std_logic_vector(7 downto 0); CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(7 downto 0));
+	port (
+	D: in std_logic_vector(7 downto 0); 
+	CLOCK: in std_logic; 
+	RST: in std_logic; 
+	Q: out std_logic_vector(7 downto 0));
 end Reg_Out_2;
 
 architecture RegPP2 of Reg_Out_2 is
@@ -150,7 +248,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- registro uscita (PP) 3
 
 entity Reg_Out_3 is
-	port (D: in std_logic_vector(7 downto 0); CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(7 downto 0));
+	port (
+	D: in std_logic_vector(7 downto 0); 
+	CLOCK: in std_logic; 
+	RST: in std_logic; 
+	Q: out std_logic_vector(7 downto 0));
 end Reg_Out_3;
 
 architecture RegPP3 of Reg_Out_3 is
@@ -179,7 +281,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- Registro ingresso SP
 
 entity Reg_In is
-    port(D: in std_logic; CLOCK: in std_logic; RST: in std_logic; Q: out std_logic_vector(15 downto 0));
+    port(
+    D: in std_logic; 
+    CLOCK: in std_logic; 
+    RST: in std_logic; 
+    Q: out std_logic_vector(15 downto 0));
 end Reg_In;
 
 architecture RSP of Reg_In is
@@ -294,6 +400,23 @@ begin
         
 end FSM_arch;
 
--- TODO:
-        -- forse aggiungere un altro segnale di sincronizzazione per i registri, per farli lavorare solo quando serve e non a ogni ciclo di clock
-        -- forse aggiungere un input a fsm per il dato dalla memoria invece di mandarlo direttamente nel mux, non so se cambia qualcosa
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity demux is
+    port(
+        S0: in std_logic;
+        S1: in std_logic;
+        I: in std_logic_vector(7 downto 0);
+        OUT0: out std_logic_vector(7 downto 0);
+        OUT1: out std_logic_vector(7 downto 0);
+        OUT2: out std_logic_vector(7 downto 0);
+        OUT3: out std_logic_vector(7 downto 0)
+    );
+end demux;
+
+architecture DMX_arc of demux is
+    begin
+    -- TODO descrivere l'architettura
+    end process;
+end DMX_arc;
