@@ -114,33 +114,33 @@ end component;
 
 --TODO: mappare le entity alle porte
 begin
-Z0: Reg_out_0 port map (
-    --ingresso => D,
-    i_clk => CLOCK,
-    i_rst => RST,
-    o_z0 => Q
-);
+--Z0: Reg_out_0 port map (
+--    --ingresso => D,
+--    i_clk => CLOCK,
+--    i_rst => RST,
+--    o_z0 => Q
+--);
 
-Z1: Reg_out_1 port map (
-    --ingresso => D,
-    i_clk => CLOCK,
-    i_rst => RST,
-    o_z0 => Q
-);
+--Z1: Reg_out_1 port map (
+--    --ingresso => D,
+--    i_clk => CLOCK,
+--    i_rst => RST,
+--    o_z0 => Q
+--);
 
-Z2: Reg_out_2 port map (
-    --ingresso => D,
-    i_clk => CLOCK,
-    i_rst => RST,
-    o_z0 => Q
-);
+--Z2: Reg_out_2 port map (
+--    --ingresso => D,
+--    i_clk => CLOCK,
+--    i_rst => RST,
+--    o_z0 => Q
+--);
 
-Z3: Reg_out_3 port map (
-    --ingresso => D,
-    i_clk => CLOCK,
-    i_rst => RST,
-    o_z0 => Q
-);
+--Z3: Reg_out_3 port map (
+--    --ingresso => D,
+--    i_clk => CLOCK,
+--    i_rst => RST,
+--    o_z0 => Q
+--);
 end Behavioral;
 
 
