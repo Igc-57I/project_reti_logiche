@@ -68,22 +68,16 @@ end Reg_Out_0;
 
 architecture RegPP0 of Reg_Out_0 is
 begin
-	process(CLOCK) --assegnamento dell'ingresso
+	process(CLOCK, RST) --assegnamento dell'ingresso
 		variable REG: std_logic_vector(7 downto 0);
 	begin
-		if(CLOCK'event and CLOCK = '1') then
+    	if(RST'event and RST = '1') then
+			REG := (others => '0');
+		elsif(CLOCK'event and CLOCK = '1') then
 			REG:= D;
 		end if;
 		Q  <= REG;
 	end process;
-
-	process(RST) --reset al valore 0
-	begin
-		if(RST'event and RST = '1') then
-			Q <= (others => '0');
-		end if;
-	end process;
-		
 end RegPP0;
 
 library IEEE;
@@ -97,22 +91,16 @@ end Reg_Out_1;
 
 architecture RegPP1 of Reg_Out_1 is
 begin
-	process(CLOCK) --assegnamento dell'ingresso
+	process(CLOCK, RST) --assegnamento dell'ingresso
 		variable REG: std_logic_vector(7 downto 0);
 	begin
-		if(CLOCK'event and CLOCK = '1') then
+    	if(RST'event and RST = '1') then
+			REG := (others => '0');
+		elsif(CLOCK'event and CLOCK = '1') then
 			REG:= D;
 		end if;
 		Q  <= REG;
 	end process;
-
-	process(RST) --reset al valore 0
-	begin
-		if(RST'event and RST = '1') then
-			Q <= (others => '0');
-		end if;
-	end process;
-		
 end RegPP1;
 
 library IEEE;
@@ -126,22 +114,16 @@ end Reg_Out_2;
 
 architecture RegPP2 of Reg_Out_2 is
 begin
-	process(CLOCK) --assegnamento dell'ingresso
+	process(CLOCK, RST) --assegnamento dell'ingresso
 		variable REG: std_logic_vector(7 downto 0);
 	begin
-		if(CLOCK'event and CLOCK = '1') then
+    	if(RST'event and RST = '1') then
+			REG := (others => '0');
+		elsif(CLOCK'event and CLOCK = '1') then
 			REG:= D;
 		end if;
 		Q  <= REG;
 	end process;
-
-	process(RST) --reset al valore 0
-	begin
-		if(RST'event and RST = '1') then
-			Q <= (others => '0');
-		end if;
-	end process;
-		
 end RegPP2;
 
 library IEEE;
@@ -155,22 +137,16 @@ end Reg_Out_3;
 
 architecture RegPP3 of Reg_Out_3 is
 begin
-	process(CLOCK) --assegnamento dell'ingresso
+	process(CLOCK, RST) --assegnamento dell'ingresso
 		variable REG: std_logic_vector(7 downto 0);
 	begin
-		if(CLOCK'event and CLOCK = '1') then
+    	if(RST'event and RST = '1') then
+			REG := (others => '0');
+		elsif(CLOCK'event and CLOCK = '1') then
 			REG:= D;
 		end if;
 		Q  <= REG;
 	end process;
-
-	process(RST) --reset al valore 0
-	begin
-		if(RST'event and RST = '1') then
-			Q <= (others => '0');
-		end if;
-	end process;
-		
 end RegPP3;
 
 library IEEE;
@@ -184,20 +160,17 @@ end Reg_In;
 
 architecture RSP of Reg_In is
 begin
-    process(CLOCK) --scorrimento ed inserimento
+    process(CLOCK, RST) --scorrimento ed inserimento
         variable REG: std_logic_vector(15 downto 0);
     begin
-        if(CLOCK'event and CLOCK = '1') then
+        if(RST'event and RST = '1') then            
+            REG := (others => '0');
+            -- Q <= "0000000000000000";
+        elsif(CLOCK'event and CLOCK = '1') then
 			REG := REG(14 downto 0) & D;
+			-- Q <= Q(14 downto 0) & D;
 		end if;
 		Q <= REG;
-    end process;
-    
-    process(RST)
-    begin
-        if(RST'event and RST = '1') then            
-            Q <= (others => '0');
-        end if;
     end process;
 end RSP;
 
@@ -214,7 +187,7 @@ entity FSM is
         RST: in std_logic; 
         W_TO_REG: out std_logic;
         MEM_EN: out std_logic;
-        A: inout std_logic_vector(1 downto 0); --bro?
+        A: out std_logic_vector(1 downto 0); --bro?
         DONE: out std_logic);
 end FSM;
     
@@ -232,9 +205,9 @@ begin
     -- delta function = funzione per le transizioni di stato
     delta_function : process(CLOCK, RST)
     begin
-        if (RST'event and RST='1') then
+        if (RST'event and RST = '1') then
             curr_state <= S0;
-        elsif (CLOCK'event and CLOCK='1') then
+        elsif (CLOCK'event and CLOCK = '1') then
             if (curr_state = S0 and START = '1') then
                 curr_state <= S1;
             elsif (curr_state = S1) then
