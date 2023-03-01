@@ -44,20 +44,21 @@ entity project_reti_logiche is
         o_done : out std_logic;
         o_mem_addr : out std_logic_vector(15 downto 0);
         i_mem_data : in std_logic_vector(7 downto 0);
-        o_mem_we : out std_logic;
-        o_mem_en : out std_logic
+        o_mem_we : out std_logic := '0';
+        o_mem_en : out std_logic;
+        
+        io_w_to_reg : inout std_logic;
+        io_fsm_a : inout std_logic_vector(1 downto 0);
+        io_mux_out_sync : inout std_logic;
+        io_reg_out_sync : inout std_logic;
+        o_mux_out0 : inout std_logic_vector(7 downto 0);
+        o_mux_out1 : inout std_logic_vector(7 downto 0);
+        o_mux_out2 : inout std_logic_vector(7 downto 0);
+        o_mux_out3 : inout std_logic_vector(7 downto 0)  
         );
 end project_reti_logiche;
 
 architecture Behavioral of project_reti_logiche is
- component Reg_In is
-    port(
-    D: in std_logic; 
-    CLOCK: in std_logic; 
-    RST: in std_logic; 
-    Q: out std_logic_vector(15 downto 0));
-end component;
-
 component FSM is
     port(
         START: in std_logic; 
@@ -67,15 +68,28 @@ component FSM is
         W_TO_REG: out std_logic;
         MEM_EN: out std_logic;
         A: inout std_logic_vector(1 downto 0); --bro?
+        MUX_OUT_SYNC: out std_logic;
+        REG_OUT_SYNC: out std_logic;
         DONE: out std_logic);
+end component;
+
+component Reg_In is
+    port(
+        D: in std_logic; 
+        CLOCK: in std_logic;
+        FSM_SYNC: in std_logic;
+        START_SYNC: in std_logic;
+        RST: in std_logic; 
+        Q: out std_logic_vector(15 downto 0));
 end component;
 
 component demux is
     port(
-        S0: in std_logic;
-        S1: in std_logic;
+        A: in std_logic_vector(1 downto 0);
         I: in std_logic_vector(7 downto 0);
         CLOCK: in std_logic;
+        FSM_SYNC: in std_logic;
+        RST: in std_logic;
         OUT0: out std_logic_vector(7 downto 0);
         OUT1: out std_logic_vector(7 downto 0);
         OUT2: out std_logic_vector(7 downto 0);
@@ -85,33 +99,51 @@ end component;
 
 --TODO: mappare le entity alle porte
 begin
---Z0: Reg_out_0 port map (
---    --ingresso => D,
---    i_clk => CLOCK,
---    i_rst => RST,
---    o_z0 => Q
---);
-
---Z1: Reg_out_1 port map (
---    --ingresso => D,
---    i_clk => CLOCK,
---    i_rst => RST,
---    o_z0 => Q
---);
-
---Z2: Reg_out_2 port map (
---    --ingresso => D,
---    i_clk => CLOCK,
---    i_rst => RST,
---    o_z0 => Q
---);
-
---Z3: Reg_out_3 port map (
---    --ingresso => D,
---    i_clk => CLOCK,
---    i_rst => RST,
---    o_z0 => Q
---);
+    -- fsm port map
+    fsm_map : FSM
+    port map (
+        START => i_start,
+        W => i_w,
+        CLOCK => i_clk,
+        RST => i_rst,
+        DONE => o_done,
+        MEM_EN => o_mem_en,
+        W_TO_REG => io_w_to_reg,
+        A => io_fsm_a,
+        MUX_OUT_SYNC => io_mux_out_sync,
+        REG_OUT_SYNC => io_reg_out_sync
+    );
+    
+    -- reg in port map
+    reg_in_map : Reg_In
+    port map (
+        D => io_w_to_reg,
+        CLOCK => i_clk,
+        FSM_SYNC => io_reg_out_sync,
+        START_SYNC => i_start,
+        RST => i_rst,
+        Q => o_mem_addr
+    );
+    
+    -- mux port map
+    mux_map : demux
+    port map (
+        A => io_fsm_a,
+        I => i_mem_data,
+        CLOCK => i_clk,
+        FSM_SYNC => io_mux_out_sync,
+        RST => i_rst,
+        OUT0 => o_mux_out0,
+        OUT1 => o_mux_out1,
+        OUT2 => o_mux_out2,
+        OUT3 => o_mux_out3
+    );
+    
+    o_z0 <= o_mux_out0;
+    o_z1 <= o_mux_out1;
+    o_z2 <= o_mux_out2;
+    o_z3 <= o_mux_out3;
+        
 end Behavioral;
 
 
@@ -123,7 +155,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity Reg_In is
     port(
     D: in std_logic; 
-    CLOCK: in std_logic; 
+    CLOCK: in std_logic;
+    FSM_SYNC: in std_logic; -- usato per leggere i valori in ingresso solo quando lo dice la fsm
+    START_SYNC: in std_logic; -- usato per sincronizzare su start
     RST: in std_logic; 
     Q: out std_logic_vector(15 downto 0));
 end Reg_In;
@@ -131,12 +165,12 @@ end Reg_In;
 architecture RSP of Reg_In is
 begin
     process(CLOCK, RST) --scorrimento ed inserimento
-        variable REG: std_logic_vector(15 downto 0);
+        variable REG: std_logic_vector(15 downto 0) := (others => '0');
     begin
         if(RST'event and RST = '1') then            
             REG := (others => '0');
             -- Q <= "0000000000000000";
-        elsif(CLOCK'event and CLOCK = '1') then
+        elsif(FSM_SYNC = '1' and START_SYNC = '1' and CLOCK'event and CLOCK = '1') then
 			REG := REG(14 downto 0) & D;
 			-- Q <= Q(14 downto 0) & D;
 		end if;
@@ -158,11 +192,13 @@ entity FSM is
         W_TO_REG: out std_logic;
         MEM_EN: out std_logic;
         A: inout std_logic_vector(1 downto 0); --bro?
+        MUX_OUT_SYNC: out std_logic; -- usato per comandare al mux di leggere il dato dalla memoria solo quando la fsm sta nello stato giusto
+        REG_OUT_SYNC: out std_logic; -- usato per dire al reg in quando leggere l'input
         DONE: out std_logic);
 end FSM;
     
 architecture FSM_arch of FSM is
-    type S is (S0, S1, S2, S3, S4, S5);
+    type S is (S0, S1, S2, S3, S4, S5, S6, S7);
     -- S0 = stato iniziale / reset
     -- S1 = leggo primo bit
     -- S2 = leggo secondo bit
@@ -170,6 +206,7 @@ architecture FSM_arch of FSM is
     -- S4 = interazione con memoria
     -- S5 = visualizzo uscite
     signal curr_state : S;
+    
 begin
     
     -- delta function = funzione per le transizioni di stato
@@ -185,10 +222,15 @@ begin
             elsif (curr_state = S2) then
                 curr_state <= S3;
             elsif (curr_state = S3 and START = '0') then
+                --REG_OUT_SYNC <= '0';
                 curr_state <= S4;
             elsif (curr_state = S4) then
                 curr_state <= S5;
             elsif (curr_state = S5) then
+                curr_state <= S6;
+            elsif (curr_state = S6) then
+                curr_state <= S7;
+            elsif (curr_state = S7) then
                 curr_state <= S0;
             else
                 curr_state <= curr_state;
@@ -198,47 +240,40 @@ begin
     end process;
     
     -- lambda function = funzione per gestire le uscite
-    lambda_function : process(START, W, CLOCK, curr_state)
+    lambda_function : process(START, W, curr_state)
     begin
         if (curr_state = S0) then
             -- in S0 setto tutte le uscite a zero
             DONE <= '0';
-            W_TO_REG <= '0'; -- forse questa non serve
             MEM_EN <= '0';
+            MUX_OUT_SYNC <= '0';
+            REG_OUT_SYNC <= '0';
             A <= "XX";
         elsif (curr_state = S1) then
             -- mantengo uscite a 0 tranne A(0) primo bit mux
-            DONE <= '0';
-            W_TO_REG <= '0'; -- forse questa non serve
-            MEM_EN <= '0';
-            if (CLOCK = '1' and A(0) = 'X') then
+            if (A(0) = 'X') then
                 A(0) <= W;
             end if;
         elsif (curr_state = S2) then
             -- come sopra ma modifico secondo bit
-            DONE <= '0';
-            W_TO_REG <= '0'; -- forse questa non serve
-            MEM_EN <= '0';
-            if (CLOCK = '1' and A(1) = 'X') then
+            if (A(1) = 'X') then
                 A(1) <= W;
             end if;
+            REG_OUT_SYNC <= '1';
+            W_TO_REG <= W;
         elsif (curr_state = S3) then
             -- mando i bit in ingresso al registro usando W_TO_REG
-            DONE <= '0';
-            if (CLOCK = '1') then
-                W_TO_REG <= W; -- poi il registro gestisce come salvarlo
-            end if;
-            MEM_EN <= '0';
+            W_TO_REG <= W; -- poi il registro gestisce come salvarlo
         elsif (curr_state = S4) then
-            -- interagisco con memoria, tengo a 0 le uscite e aspetto 1 ciclo di clock per la risposta
-            DONE <= '0';
-            W_TO_REG <= '0'; -- forse non serve
+            REG_OUT_SYNC <= '0';
+        elsif (curr_state = S5) then
+            -- interagisco con memoria, tengo a 0 le uscite e aspetto 1 ciclo di clock per la risposta';
             MEM_EN <= '1'; -- cambio per interagire con memoria
-        elsif (curr_state = S5) then --cambiato in s5 (probabile typo)
+        elsif (curr_state = s6) then
+            MUX_OUT_SYNC <= '1';
+        elsif (curr_state = S7) then --cambiato in s5 (probabile typo)
             -- salvo il dato dalla memoria nei registri d'uscita e li rendo visibili
             DONE <= '1'; -- rendo visibili le uscite
-            W_TO_REG <= '0'; -- forse non serve
-            MEM_EN <= '1'; -- credo serve = 1 per poter copiare il dato nei registri ma forse va bene a 0
         end if;
     end process;
         
@@ -249,10 +284,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity demux is
     port(
-        S0: in std_logic;
-        S1: in std_logic;
+        A: in std_logic_vector(1 downto 0);
         I: in std_logic_vector(7 downto 0);
         CLOCK: in std_logic;
+        FSM_SYNC: in std_logic; -- vedi MUX_OUT_SYNC nella fsm
+        RST: in std_logic;
         OUT0: out std_logic_vector(7 downto 0);
         OUT1: out std_logic_vector(7 downto 0);
         OUT2: out std_logic_vector(7 downto 0);
@@ -262,18 +298,46 @@ end demux;
 
 architecture DMX_arc of demux is
     begin
-    process(CLOCK)
+    process(CLOCK, RST)
+        variable REG0: std_logic_vector(7 downto 0) := (others => '0');
+        variable REG1: std_logic_vector(7 downto 0) := (others => '0');
+        variable REG2: std_logic_vector(7 downto 0) := (others => '0');
+        variable REG3: std_logic_vector(7 downto 0) := (others => '0');
     begin
-        if(CLOCK'event and CLOCK = '1') then
-            if (S0 = '0' and S1 = '0') then
-                OUT0 <= I;
-            elsif (S0 = '0' and S1 = '1') then
-                OUT1 <= I;
-            elsif (S0 = '1' and S1 = '0') then
-                OUT2 <= I;
-            elsif (S0 = '1' and S1 = '1') then
-                OUT3 <= I;
+        if (RST'event and RST = '1') then
+            REG0 := (others => '0');
+            REG1 := (others => '0');
+            REG2 := (others => '0');
+            REG3 := (others => '0');
+        elsif(FSM_SYNC = '1' and CLOCK'event and CLOCK = '1') then
+            if (A(0) = '0' and A(1) = '0') then
+                REG0 := I;
+            elsif (A(0) = '0' and A(1) = '1') then
+                REG1 := I;
+            elsif (A(0) = '1' and A(1) = '0') then
+                REG2 := I;
+            elsif (A(0) = '1' and A(1) = '1') then
+                REG3 := I;
             end if;
         end if;
+        
+        OUT0 <= REG0;
+        OUT1 <= REG1;
+        OUT2 <= REG2;
+        OUT3 <= REG3;
+        
+        
+-- non funziona ma intanto lo tengo qui        
+--        if (DONE = '1') then
+--            OUT0 <= REG0;
+--            OUT1 <= REG1;
+--            OUT2 <= REG2;
+--            OUT3 <= REG3;
+--        else
+--            OUT0 <= (others => '0');
+--            OUT1 <= (others => '0');
+--            OUT2 <= (others => '0');
+--            OUT3 <= (others => '0');
+--        end if;
     end process;
 end DMX_arc;

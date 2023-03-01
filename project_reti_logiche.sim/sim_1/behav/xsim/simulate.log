@@ -1,1 +1,4 @@
 Time resolution is 1 ps
+Failure: TEST FALLITO (postdone Z0--Z3 != 0 ) found 162
+Time: 1400 ns  Iteration: 0  Process: /project_tb/testRoutine  File: C:/Users/crmgr/Downloads/tb_example23_agg.vhd
+$finish called at time : 1400 ns : File "C:/Users/crmgr/Downloads/tb_example23_agg.vhd" Line 145
