@@ -233,29 +233,31 @@ begin
         if (RST'event and RST = '1') then
             curr_state <= S0;
             REG_RST <= RST;
-        elsif (CLOCK'event and CLOCK = '1') then
-            case curr_state is
-                when S0 =>
-                    if (START = '1') then
-                        curr_state <= S1;
-                    end if;
-                when S1 =>
-                    curr_state <= S2;
-                when S2 =>
-                    curr_state <= S3;
-                when S3 =>
-                    if (START = '0') then
-                        curr_state <= S4;
-                    end if;
-                when S4 =>
-                    curr_state <= S5;
-                when S5 =>
-                    curr_state <= S6;
-                when S6 =>
-                    curr_state <= S7;
-                when S7 =>
-                    curr_state <= S0;
-            end case;
+        else
+            if (CLOCK'event and CLOCK = '1') then
+                case curr_state is
+                    when S0 =>
+                        if (START = '1') then
+                            curr_state <= S1;
+                        end if;
+                    when S1 =>
+                        curr_state <= S2;
+                    when S2 =>
+                        curr_state <= S3;
+                    when S3 =>
+                        if (START = '0') then
+                            curr_state <= S4;
+                        end if;
+                    when S4 =>
+                        curr_state <= S5;
+                    when S5 =>
+                        curr_state <= S6;
+                    when S6 =>
+                        curr_state <= S7;
+                    when S7 =>
+                        curr_state <= S0;
+                end case;
+            end if;                      
 --            if (curr_state = S0 and START = '1') then
 --                curr_state <= S1;
 --            elsif (curr_state = S1) then
