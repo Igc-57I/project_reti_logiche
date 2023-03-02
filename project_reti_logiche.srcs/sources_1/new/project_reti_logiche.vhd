@@ -123,7 +123,7 @@ begin
     -- reg in port map
     reg_in_map : Reg_In
     port map (
-        D => io_w_to_reg,
+        D => i_w,
         CLOCK => i_clk,
         FSM_SYNC => io_reg_out_sync,
         START_SYNC => i_start,
@@ -182,10 +182,10 @@ begin
     process(CLOCK, RST, FSM_RST) --scorrimento ed inserimento
         variable REG: std_logic_vector(15 downto 0) := (others => '0');
     begin
-        if(RST'event and RST = '1') then            
+        if(RST = '1') then            
             REG := (others => '0');
             -- Q <= "0000000000000000";
-        elsif(FSM_RST'event and FSM_RST = '1') then            
+        elsif(FSM_RST = '1') then            
             REG := (others => '0');
         elsif(FSM_SYNC = '1' and START_SYNC = '1' and CLOCK'event and CLOCK = '1') then
 			REG := REG(14 downto 0) & D;
@@ -209,7 +209,7 @@ entity FSM is
         REG_RST: out std_logic;
         W_TO_REG: out std_logic;
         MEM_EN: out std_logic;
-        A: inout std_logic_vector(1 downto 0); --bro?
+        A: inout std_logic_vector(1 downto 0);
         MUX_OUT_SYNC: out std_logic; -- usato per comandare al mux di leggere il dato dalla memoria solo quando la fsm sta nello stato giusto
         REG_OUT_SYNC: out std_logic; -- usato per dire al reg in quando leggere l'input
         DONE: out std_logic);
@@ -221,18 +221,19 @@ architecture FSM_arch of FSM is
     -- S1 = leggo primo bit
     -- S2 = leggo secondo bit
     -- S3 = leggo bit per indirizzo di memoria
-    -- S4 = interazione con memoria
-    -- S5 = visualizzo uscite
+    -- S4 = aspetto un cliclo di clock
+    -- S5 = interazione con memoria
+    -- S6 = aspetto un ciclo di clock
+    -- S7 = visualizzo uscite
     signal curr_state : S;
-    
 begin
     
     -- delta function = funzione per le transizioni di stato
     delta_function : process(CLOCK, RST)
     begin
-        if (RST'event and RST = '1') then
+        if (RST = '1') then
             curr_state <= S0;
-            REG_RST <= RST;
+            --REG_RST <= RST;
         else
             if (CLOCK'event and CLOCK = '1') then
                 case curr_state is
@@ -258,34 +259,14 @@ begin
                         curr_state <= S0;
                 end case;
             end if;                      
---            if (curr_state = S0 and START = '1') then
---                curr_state <= S1;
---            elsif (curr_state = S1) then
---                curr_state <= S2;
---            elsif (curr_state = S2) then
---                curr_state <= S3;
---            elsif (curr_state = S3 and START = '0') then
---                --REG_OUT_SYNC <= '0';
---                curr_state <= S4;
---            elsif (curr_state = S4) then
---                curr_state <= S5;
---            elsif (curr_state = S5) then
---                curr_state <= S6;
---            elsif (curr_state = S6) then
---                curr_state <= S7;
---            elsif (curr_state = S7) then
---                curr_state <= S0;
---            else
---                curr_state <= curr_state;
---            -- aggiunto else
---            end if;
         end if;
     end process;
     
     -- lambda function = funzione per gestire le uscite
     lambda_function : process(curr_state)
+    variable REG: std_logic;
     begin
-        W_TO_REG <= W;
+        REG := W;
         case curr_state is
             when S0 =>
                 DONE <= '0';
@@ -293,21 +274,16 @@ begin
                 MUX_OUT_SYNC <= '0';
                 REG_OUT_SYNC <= '0';
                 REG_RST <= '1';
-                A <= "XX";
+                A <= "00";
             when S1 =>
                 REG_RST <= '0';
-                if (A(0) = 'X') then
-                    A(0) <= W;
-                end if;
+                A(0) <= REG;
             when S2 =>
                 REG_RST <= '0';
-                if (A(1) = 'X') then
-                    A(1) <= W;
-                end if;
+                    A(1) <= REG;
                 REG_OUT_SYNC <= '1';
---                W_TO_REG <= W;
-            when S3 =>
---                W_TO_REG <= W;
+                 W_TO_REG <= REG;
+            when S3 => 
             when S4 =>
                 REG_OUT_SYNC <= '0';
             when S5 =>
@@ -317,42 +293,6 @@ begin
             when S7 =>
                 DONE <= '1';
         end case;
-        
---        if (curr_state = S0) then
---            -- in S0 setto tutte le uscite a zero
---            DONE <= '0';
---            MEM_EN <= '0';
---            MUX_OUT_SYNC <= '0';
---            REG_OUT_SYNC <= '0';
---            REG_RST <= '1';
---            A <= "XX";
---        elsif (curr_state = S1) then
---            -- mantengo uscite a 0 tranne A(0) primo bit mux
---            REG_RST <= '0';
---            if (A(0) = 'X') then
---                A(0) <= W;
---            end if;
---        elsif (curr_state = S2) then
---            -- come sopra ma modifico secondo bit
---            if (A(1) = 'X') then
---                A(1) <= W;
---            end if;
---            REG_OUT_SYNC <= '1';
---            W_TO_REG <= W;
---        elsif (curr_state = S3) then
---            -- mando i bit in ingresso al registro usando W_TO_REG
---            W_TO_REG <= W; -- poi il registro gestisce come salvarlo
---        elsif (curr_state = S4) then
---            REG_OUT_SYNC <= '0';
---        elsif (curr_state = S5) then
---            -- interagisco con memoria, tengo a 0 le uscite e aspetto 1 ciclo di clock per la risposta';
---            MEM_EN <= '1'; -- cambio per interagire con memoria
---        elsif (curr_state = s6) then
---            MUX_OUT_SYNC <= '1';
---        elsif (curr_state = S7) then --cambiato in s5 (probabile typo)
---            -- salvo il dato dalla memoria nei registri d'uscita e li rendo visibili
---            DONE <= '1'; -- rendo visibili le uscite
---        end if;
     end process;
         
 end FSM_arch;
@@ -383,7 +323,7 @@ architecture DMX_arc of demux is
         variable REG2: std_logic_vector(7 downto 0) := (others => '0');
         variable REG3: std_logic_vector(7 downto 0) := (others => '0');
     begin
-        if (RST'event and RST = '1') then
+        if (RST = '1') then
             REG0 := (others => '0');
             REG1 := (others => '0');
             REG2 := (others => '0');
@@ -399,12 +339,6 @@ architecture DMX_arc of demux is
                 REG3 := I;
             end if;
         end if;
-        
---        OUT0 <= REG0;
---        OUT1 <= REG1;
---        OUT2 <= REG2;
---        OUT3 <= REG3;
-        
         
         if (DONE = '1') then
             OUT0 <= REG0;

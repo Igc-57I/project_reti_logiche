@@ -2,9 +2,5 @@
 2020.2
 Oct 14 2022
 05:20:55
-C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_1/new/tb_Reg_In.vhd,1677595836,vhdl,,,,tb_reg_in,,,,,,,,
-C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_1/new/tb_demux.vhd,1677598726,vhdl,,,,tb_demux,,,,,,,,
-C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_1/new/tb_fsm.vhd,1677614603,vhdl,,,,tb_fsm,,,,,,,,
-C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_1/new/tb_reg_out.vhd,1677596742,vhdl,,,,tb_reg_out,,,,,,,,
-C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sources_1/new/project_reti_logiche.vhd,1677753046,vhdl,,,,demux;fsm;project_reti_logiche;reg_in,,,,,,,,
-C:/Users/crmgr/Downloads/tb_example23_agg.vhd,1677752899,vhdl,,,,project_tb,,,,,,,,
+C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.srcs/sim_1/new/tb_example23_agg.vhd,1677756425,vhdl,,,,project_tb,,,,,,,,
+C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.srcs/sources_1/new/project_reti_logiche.vhd,1677762666,vhdl,,,,demux;fsm;project_reti_logiche;reg_in,,,,,,,,
