@@ -213,19 +213,21 @@ begin
     
     -- delta function = funzione per le transizioni di stato
     delta_function : process(CLOCK, RST)
+    variable REGA: std_logic_vector(1 downto 0);
     begin
         if (RST = '1') then
             curr_state <= S0;
-            --REG_RST <= RST;
         else
             if (CLOCK'event and CLOCK = '1') then
                 case curr_state is
                     when S0 =>
                         if (START = '1') then
                             curr_state <= S1;
+                            REGA(0) := W;
                         end if;
                     when S1 =>
                         curr_state <= S2;
+                        REGA(1) := W;
                     when S2 =>
                         curr_state <= S3;
                     when S3 =>
@@ -243,13 +245,14 @@ begin
                 end case;
             end if;                      
         end if;
+        A <= REGA;
     end process;
     
     -- lambda function = funzione per gestire le uscite
     lambda_function : process(curr_state)
-    variable REG: std_logic;
+    --variable REG: std_logic;
     begin
-        REG := W;
+        --REG := W;
         case curr_state is
             when S0 =>
                 DONE <= '0';
@@ -257,17 +260,17 @@ begin
                 MUX_OUT_SYNC <= '0';
                 REG_OUT_SYNC <= '0';
                 REG_RST <= '1';
-                A <= "00";
+                --A <= "00";
             when S1 =>
                 REG_RST <= '0';
-                A(0) <= REG;
+                --A(0) <= REG;
                 DONE <= '0';
                 MEM_EN <= '0';
                 MUX_OUT_SYNC <= '0';
                 REG_OUT_SYNC <= '0';
             when S2 =>
                 REG_RST <= '0';
-                A(1) <= REG;
+                --A(1) <= REG;
                 REG_OUT_SYNC <= '1';
                 DONE <= '0';
                 MEM_EN <= '0';
