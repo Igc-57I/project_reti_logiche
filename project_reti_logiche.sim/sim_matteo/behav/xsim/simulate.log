@@ -1,0 +1,4 @@
+Time resolution is 1 ps
+Failure: Simulation Ended! TEST PASSATO (EXAMPLE)
+Time: 21650 ns  Iteration: 4  Process: /tb_many/testRoutine  File: C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.srcs/sim_matteo/tbmatteo3_many.vhd
+$finish called at time : 21650 ns : File "C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.srcs/sim_matteo/tbmatteo3_many.vhd" Line 299

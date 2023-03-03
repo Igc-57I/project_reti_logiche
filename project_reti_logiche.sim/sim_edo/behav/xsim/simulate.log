@@ -1,0 +1,4 @@
+Time resolution is 1 ps
+Note: Dumb test cases completed
+Time: 282 ns  Iteration: 0  Process: /dumb_tb/test  File: C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.srcs/sim_edo/tbedo1_Dumb.vhd
+$stop called at time : 282 ns : File "C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.srcs/sim_edo/tbedo1_Dumb.vhd" Line 142

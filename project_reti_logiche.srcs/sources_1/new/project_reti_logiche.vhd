@@ -47,16 +47,11 @@ entity project_reti_logiche is
         o_mem_we : out std_logic := '0';
         o_mem_en : out std_logic;
         
-        io_w_to_reg : inout std_logic;
         io_fsm_a : inout std_logic_vector(1 downto 0);
         io_mux_out_sync : inout std_logic;
         io_reg_out_sync : inout std_logic;
         io_my_done : inout std_logic;
         io_reg_rst : inout std_logic
---        o_mux_out0 : inout std_logic_vector(7 downto 0);
---        o_mux_out1 : inout std_logic_vector(7 downto 0);
---        o_mux_out2 : inout std_logic_vector(7 downto 0);
---        o_mux_out3 : inout std_logic_vector(7 downto 0)  
         );
 end project_reti_logiche;
 
@@ -68,7 +63,6 @@ component FSM is
         CLOCK: in std_logic; 
         RST: in std_logic;
         REG_RST: out std_logic;
-        W_TO_REG: out std_logic;
         MEM_EN: out std_logic;
         A: inout std_logic_vector(1 downto 0); --bro?
         MUX_OUT_SYNC: out std_logic;
@@ -114,7 +108,6 @@ begin
         REG_RST => io_reg_rst,
         DONE => io_my_done,
         MEM_EN => o_mem_en,
-        W_TO_REG => io_w_to_reg,
         A => io_fsm_a,
         MUX_OUT_SYNC => io_mux_out_sync,
         REG_OUT_SYNC => io_reg_out_sync
@@ -141,10 +134,6 @@ begin
         FSM_SYNC => io_mux_out_sync,
         RST => i_rst,
         DONE => io_my_done,
---        OUT0 => o_mux_out0,
---        OUT1 => o_mux_out1,
---        OUT2 => o_mux_out2,
---        OUT3 => o_mux_out3
         OUT0 => o_z0,
         OUT1 => o_z1,
         OUT2 => o_z2,
@@ -152,11 +141,6 @@ begin
     );
     
     o_done <= io_my_done;
-    
---    o_z0 <= o_mux_out0;
---    o_z1 <= o_mux_out1;
---    o_z2 <= o_mux_out2;
---    o_z3 <= o_mux_out3;
         
 end Behavioral;
 
@@ -207,7 +191,6 @@ entity FSM is
         CLOCK: in std_logic; 
         RST: in std_logic;
         REG_RST: out std_logic;
-        W_TO_REG: out std_logic;
         MEM_EN: out std_logic;
         A: inout std_logic_vector(1 downto 0);
         MUX_OUT_SYNC: out std_logic; -- usato per comandare al mux di leggere il dato dalla memoria solo quando la fsm sta nello stato giusto
@@ -282,7 +265,6 @@ begin
                 REG_RST <= '0';
                     A(1) <= REG;
                 REG_OUT_SYNC <= '1';
-                 W_TO_REG <= REG;
             when S3 => 
             when S4 =>
                 REG_OUT_SYNC <= '0';
