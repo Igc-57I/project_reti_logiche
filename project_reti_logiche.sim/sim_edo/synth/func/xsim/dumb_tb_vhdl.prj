@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"dumb_tb_func_synth.vhd" \
+"../../../../../project_reti_logiche.srcs/sim_edo/tbedo1_Dumb.vhd" \
+
+# Do not sort compile order
+nosort

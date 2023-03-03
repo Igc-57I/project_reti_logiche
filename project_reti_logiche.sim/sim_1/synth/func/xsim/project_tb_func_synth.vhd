@@ -1,10 +1,10 @@
 -- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2022.2 (win64) Build 3671981 Fri Oct 14 05:00:03 MDT 2022
--- Date        : Thu Mar  2 13:59:20 2023
--- Host        : JackB_Laptop running 64-bit major release  (build 9200)
+-- Date        : Fri Mar  3 22:52:50 2023
+-- Host        : DESKTOP-D997S7A running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -mode funcsim -nolib -force -file
---               C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.sim/sim_1/synth/func/xsim/project_tb_func_synth.vhd
+--               C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.sim/sim_1/synth/func/xsim/project_tb_func_synth.vhd
 -- Design      : project_reti_logiche
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -16,214 +16,97 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity FSM is
   port (
-    io_reg_rst_OBUF : out STD_LOGIC;
-    io_w_to_reg_OBUF : out STD_LOGIC;
-    o_mem_en_OBUF : out STD_LOGIC;
-    io_mux_out_sync_OBUF : out STD_LOGIC;
-    io_reg_out_sync_OBUF : out STD_LOGIC;
-    io_my_done_OBUF : out STD_LOGIC;
     i_rst : out STD_LOGIC;
+    io_reg_rst_OBUF : out STD_LOGIC;
+    io_reg_out_sync_OBUF : out STD_LOGIC;
     o_z0_OBUF : out STD_LOGIC_VECTOR ( 7 downto 0 );
+    io_my_done_OBUF : out STD_LOGIC;
     o_z1_OBUF : out STD_LOGIC_VECTOR ( 7 downto 0 );
     o_z2_OBUF : out STD_LOGIC_VECTOR ( 7 downto 0 );
     o_z3_OBUF : out STD_LOGIC_VECTOR ( 7 downto 0 );
     E : out STD_LOGIC_VECTOR ( 0 to 0 );
-    \FSM_sequential_curr_state_reg[1]_0\ : out STD_LOGIC_VECTOR ( 1 downto 0 );
+    \delta_function.REGA_reg[1]_0\ : out STD_LOGIC_VECTOR ( 1 downto 0 );
+    io_mux_out_sync_OBUF : out STD_LOGIC;
+    \delta_function.REGA_reg[0]_0\ : out STD_LOGIC_VECTOR ( 0 to 0 );
+    \delta_function.REGA_reg[0]_1\ : out STD_LOGIC_VECTOR ( 0 to 0 );
+    \delta_function.REGA_reg[0]_2\ : out STD_LOGIC_VECTOR ( 0 to 0 );
+    o_mem_en_OBUF : out STD_LOGIC;
     \FSM_sequential_curr_state_reg[2]_0\ : out STD_LOGIC_VECTOR ( 0 to 0 );
-    \FSM_sequential_curr_state_reg[2]_1\ : out STD_LOGIC_VECTOR ( 0 to 0 );
-    \FSM_sequential_curr_state_reg[2]_2\ : out STD_LOGIC_VECTOR ( 0 to 0 );
-    \FSM_sequential_curr_state_reg[1]_1\ : out STD_LOGIC_VECTOR ( 0 to 0 );
-    D : in STD_LOGIC_VECTOR ( 0 to 0 );
-    AR : in STD_LOGIC_VECTOR ( 0 to 0 );
+    i_start_IBUF : in STD_LOGIC;
+    i_rst_IBUF : in STD_LOGIC;
     Q : in STD_LOGIC_VECTOR ( 7 downto 0 );
     \o_z1[7]\ : in STD_LOGIC_VECTOR ( 7 downto 0 );
     \o_z2[7]\ : in STD_LOGIC_VECTOR ( 7 downto 0 );
     \o_z3[7]\ : in STD_LOGIC_VECTOR ( 7 downto 0 );
     CLK : in STD_LOGIC;
-    i_start_IBUF : in STD_LOGIC
+    D : in STD_LOGIC_VECTOR ( 0 to 0 )
   );
 end FSM;
 
 architecture STRUCTURE of FSM is
-  signal \A_reg[0]_i_1_n_0\ : STD_LOGIC;
-  signal \A_reg[0]_i_2_n_0\ : STD_LOGIC;
-  signal \A_reg[1]_i_1_n_0\ : STD_LOGIC;
-  signal \A_reg[1]_i_2_n_0\ : STD_LOGIC;
-  signal DONE_reg_i_1_n_0 : STD_LOGIC;
-  signal \^fsm_sequential_curr_state_reg[1]_0\ : STD_LOGIC_VECTOR ( 1 downto 0 );
-  signal \FSM_sequential_curr_state_reg_n_0_[1]\ : STD_LOGIC;
-  signal \FSM_sequential_curr_state_reg_n_0_[2]\ : STD_LOGIC;
-  signal MEM_EN_n_0 : STD_LOGIC;
-  signal MUX_OUT_SYNC_reg_i_1_n_0 : STD_LOGIC;
-  signal REG_OUT_SYNC_reg_i_1_n_0 : STD_LOGIC;
-  signal REG_RST_n_0 : STD_LOGIC;
-  signal REG_RST_reg_i_1_n_0 : STD_LOGIC;
-  signal W_TO_REG_reg_i_1_n_0 : STD_LOGIC;
-  signal \curr_state__0\ : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal \curr_state__0\ : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal \curr_state__0__0\ : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal curr_state_n_0 : STD_LOGIC;
+  signal \delta_function.REGA[0]_i_1_n_0\ : STD_LOGIC;
+  signal \delta_function.REGA[1]_i_1_n_0\ : STD_LOGIC;
+  signal \^delta_function.rega_reg[1]_0\ : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal \^io_mux_out_sync_obuf\ : STD_LOGIC;
   signal \^io_my_done_obuf\ : STD_LOGIC;
   signal \^io_reg_out_sync_obuf\ : STD_LOGIC;
   signal \^io_reg_rst_obuf\ : STD_LOGIC;
-  attribute XILINX_LEGACY_PRIM : string;
-  attribute XILINX_LEGACY_PRIM of \A_reg[0]\ : label is "LD";
-  attribute XILINX_TRANSFORM_PINMAP : string;
-  attribute XILINX_TRANSFORM_PINMAP of \A_reg[0]\ : label is "VCC:GE GND:CLR";
   attribute SOFT_HLUTNM : string;
-  attribute SOFT_HLUTNM of \A_reg[0]_i_1\ : label is "soft_lutpair22";
-  attribute SOFT_HLUTNM of \A_reg[0]_i_2\ : label is "soft_lutpair24";
-  attribute XILINX_LEGACY_PRIM of \A_reg[1]\ : label is "LD";
-  attribute XILINX_TRANSFORM_PINMAP of \A_reg[1]\ : label is "VCC:GE GND:CLR";
-  attribute SOFT_HLUTNM of \A_reg[1]_i_1\ : label is "soft_lutpair23";
-  attribute SOFT_HLUTNM of \A_reg[1]_i_2\ : label is "soft_lutpair5";
-  attribute XILINX_LEGACY_PRIM of DONE_reg : label is "LD";
-  attribute XILINX_TRANSFORM_PINMAP of DONE_reg : label is "VCC:GE GND:CLR";
-  attribute SOFT_HLUTNM of DONE_reg_i_1 : label is "soft_lutpair3";
-  attribute SOFT_HLUTNM of \FSM_sequential_curr_state[0]_i_1\ : label is "soft_lutpair22";
-  attribute SOFT_HLUTNM of \FSM_sequential_curr_state[1]_i_1\ : label is "soft_lutpair24";
+  attribute SOFT_HLUTNM of \FSM_sequential_curr_state[1]_i_1\ : label is "soft_lutpair3";
   attribute SOFT_HLUTNM of \FSM_sequential_curr_state[2]_i_1\ : label is "soft_lutpair3";
   attribute FSM_ENCODED_STATES : string;
   attribute FSM_ENCODED_STATES of \FSM_sequential_curr_state_reg[0]\ : label is "s0:000,s1:001,s2:010,s3:011,s4:100,s5:101,s6:110,s7:111";
   attribute FSM_ENCODED_STATES of \FSM_sequential_curr_state_reg[1]\ : label is "s0:000,s1:001,s2:010,s3:011,s4:100,s5:101,s6:110,s7:111";
   attribute FSM_ENCODED_STATES of \FSM_sequential_curr_state_reg[2]\ : label is "s0:000,s1:001,s2:010,s3:011,s4:100,s5:101,s6:110,s7:111";
-  attribute SOFT_HLUTNM of MEM_EN : label is "soft_lutpair2";
-  attribute XILINX_LEGACY_PRIM of MEM_EN_reg : label is "LD";
-  attribute XILINX_TRANSFORM_PINMAP of MEM_EN_reg : label is "VCC:GE GND:CLR";
-  attribute XILINX_LEGACY_PRIM of MUX_OUT_SYNC_reg : label is "LD";
-  attribute XILINX_TRANSFORM_PINMAP of MUX_OUT_SYNC_reg : label is "VCC:GE GND:CLR";
-  attribute SOFT_HLUTNM of MUX_OUT_SYNC_reg_i_1 : label is "soft_lutpair5";
-  attribute SOFT_HLUTNM of \REG0[7]_i_1\ : label is "soft_lutpair0";
-  attribute SOFT_HLUTNM of \REG1[7]_i_1\ : label is "soft_lutpair0";
-  attribute SOFT_HLUTNM of \REG2[7]_i_1\ : label is "soft_lutpair1";
-  attribute SOFT_HLUTNM of \REG3[7]_i_1\ : label is "soft_lutpair1";
-  attribute XILINX_LEGACY_PRIM of REG_OUT_SYNC_reg : label is "LD";
-  attribute XILINX_TRANSFORM_PINMAP of REG_OUT_SYNC_reg : label is "VCC:GE GND:CLR";
-  attribute SOFT_HLUTNM of REG_OUT_SYNC_reg_i_1 : label is "soft_lutpair4";
-  attribute SOFT_HLUTNM of REG_RST : label is "soft_lutpair2";
-  attribute XILINX_LEGACY_PRIM of REG_RST_reg : label is "LD";
-  attribute XILINX_TRANSFORM_PINMAP of REG_RST_reg : label is "VCC:GE GND:CLR";
-  attribute SOFT_HLUTNM of REG_RST_reg_i_1 : label is "soft_lutpair23";
-  attribute XILINX_LEGACY_PRIM of W_TO_REG_reg : label is "LD";
-  attribute XILINX_TRANSFORM_PINMAP of W_TO_REG_reg : label is "VCC:GE GND:CLR";
-  attribute SOFT_HLUTNM of W_TO_REG_reg_i_1 : label is "soft_lutpair4";
-  attribute SOFT_HLUTNM of \o_z0_OBUF[0]_inst_i_1\ : label is "soft_lutpair6";
-  attribute SOFT_HLUTNM of \o_z0_OBUF[1]_inst_i_1\ : label is "soft_lutpair6";
-  attribute SOFT_HLUTNM of \o_z0_OBUF[2]_inst_i_1\ : label is "soft_lutpair7";
-  attribute SOFT_HLUTNM of \o_z0_OBUF[3]_inst_i_1\ : label is "soft_lutpair7";
-  attribute SOFT_HLUTNM of \o_z0_OBUF[4]_inst_i_1\ : label is "soft_lutpair8";
-  attribute SOFT_HLUTNM of \o_z0_OBUF[5]_inst_i_1\ : label is "soft_lutpair8";
-  attribute SOFT_HLUTNM of \o_z0_OBUF[6]_inst_i_1\ : label is "soft_lutpair9";
-  attribute SOFT_HLUTNM of \o_z0_OBUF[7]_inst_i_1\ : label is "soft_lutpair9";
-  attribute SOFT_HLUTNM of \o_z1_OBUF[0]_inst_i_1\ : label is "soft_lutpair10";
-  attribute SOFT_HLUTNM of \o_z1_OBUF[1]_inst_i_1\ : label is "soft_lutpair10";
-  attribute SOFT_HLUTNM of \o_z1_OBUF[2]_inst_i_1\ : label is "soft_lutpair11";
-  attribute SOFT_HLUTNM of \o_z1_OBUF[3]_inst_i_1\ : label is "soft_lutpair11";
-  attribute SOFT_HLUTNM of \o_z1_OBUF[4]_inst_i_1\ : label is "soft_lutpair12";
-  attribute SOFT_HLUTNM of \o_z1_OBUF[5]_inst_i_1\ : label is "soft_lutpair12";
-  attribute SOFT_HLUTNM of \o_z1_OBUF[6]_inst_i_1\ : label is "soft_lutpair13";
-  attribute SOFT_HLUTNM of \o_z1_OBUF[7]_inst_i_1\ : label is "soft_lutpair13";
-  attribute SOFT_HLUTNM of \o_z2_OBUF[0]_inst_i_1\ : label is "soft_lutpair14";
-  attribute SOFT_HLUTNM of \o_z2_OBUF[1]_inst_i_1\ : label is "soft_lutpair14";
-  attribute SOFT_HLUTNM of \o_z2_OBUF[2]_inst_i_1\ : label is "soft_lutpair15";
-  attribute SOFT_HLUTNM of \o_z2_OBUF[3]_inst_i_1\ : label is "soft_lutpair15";
-  attribute SOFT_HLUTNM of \o_z2_OBUF[4]_inst_i_1\ : label is "soft_lutpair16";
-  attribute SOFT_HLUTNM of \o_z2_OBUF[5]_inst_i_1\ : label is "soft_lutpair16";
-  attribute SOFT_HLUTNM of \o_z2_OBUF[6]_inst_i_1\ : label is "soft_lutpair17";
-  attribute SOFT_HLUTNM of \o_z2_OBUF[7]_inst_i_1\ : label is "soft_lutpair17";
-  attribute SOFT_HLUTNM of \o_z3_OBUF[0]_inst_i_1\ : label is "soft_lutpair18";
-  attribute SOFT_HLUTNM of \o_z3_OBUF[1]_inst_i_1\ : label is "soft_lutpair18";
-  attribute SOFT_HLUTNM of \o_z3_OBUF[2]_inst_i_1\ : label is "soft_lutpair19";
-  attribute SOFT_HLUTNM of \o_z3_OBUF[3]_inst_i_1\ : label is "soft_lutpair19";
-  attribute SOFT_HLUTNM of \o_z3_OBUF[4]_inst_i_1\ : label is "soft_lutpair20";
-  attribute SOFT_HLUTNM of \o_z3_OBUF[5]_inst_i_1\ : label is "soft_lutpair20";
-  attribute SOFT_HLUTNM of \o_z3_OBUF[6]_inst_i_1\ : label is "soft_lutpair21";
-  attribute SOFT_HLUTNM of \o_z3_OBUF[7]_inst_i_1\ : label is "soft_lutpair21";
+  attribute SOFT_HLUTNM of MEM_EN : label is "soft_lutpair0";
+  attribute SOFT_HLUTNM of \REG0[7]_i_1\ : label is "soft_lutpair1";
+  attribute SOFT_HLUTNM of \REG1[7]_i_1\ : label is "soft_lutpair1";
+  attribute SOFT_HLUTNM of \REG2[7]_i_1\ : label is "soft_lutpair2";
+  attribute SOFT_HLUTNM of \REG3[7]_i_1\ : label is "soft_lutpair2";
+  attribute SOFT_HLUTNM of io_mux_out_sync_OBUF_inst_i_1 : label is "soft_lutpair4";
+  attribute SOFT_HLUTNM of io_reg_out_sync_OBUF_inst_i_1 : label is "soft_lutpair4";
+  attribute SOFT_HLUTNM of io_reg_rst_OBUF_inst_i_1 : label is "soft_lutpair0";
+  attribute SOFT_HLUTNM of \o_z0_OBUF[0]_inst_i_1\ : label is "soft_lutpair5";
+  attribute SOFT_HLUTNM of \o_z0_OBUF[1]_inst_i_1\ : label is "soft_lutpair5";
+  attribute SOFT_HLUTNM of \o_z0_OBUF[2]_inst_i_1\ : label is "soft_lutpair6";
+  attribute SOFT_HLUTNM of \o_z0_OBUF[3]_inst_i_1\ : label is "soft_lutpair6";
+  attribute SOFT_HLUTNM of \o_z0_OBUF[4]_inst_i_1\ : label is "soft_lutpair7";
+  attribute SOFT_HLUTNM of \o_z0_OBUF[5]_inst_i_1\ : label is "soft_lutpair7";
+  attribute SOFT_HLUTNM of \o_z0_OBUF[6]_inst_i_1\ : label is "soft_lutpair8";
+  attribute SOFT_HLUTNM of \o_z0_OBUF[7]_inst_i_1\ : label is "soft_lutpair8";
+  attribute SOFT_HLUTNM of \o_z1_OBUF[0]_inst_i_1\ : label is "soft_lutpair9";
+  attribute SOFT_HLUTNM of \o_z1_OBUF[1]_inst_i_1\ : label is "soft_lutpair9";
+  attribute SOFT_HLUTNM of \o_z1_OBUF[2]_inst_i_1\ : label is "soft_lutpair10";
+  attribute SOFT_HLUTNM of \o_z1_OBUF[3]_inst_i_1\ : label is "soft_lutpair10";
+  attribute SOFT_HLUTNM of \o_z1_OBUF[4]_inst_i_1\ : label is "soft_lutpair11";
+  attribute SOFT_HLUTNM of \o_z1_OBUF[5]_inst_i_1\ : label is "soft_lutpair11";
+  attribute SOFT_HLUTNM of \o_z1_OBUF[6]_inst_i_1\ : label is "soft_lutpair12";
+  attribute SOFT_HLUTNM of \o_z1_OBUF[7]_inst_i_1\ : label is "soft_lutpair12";
+  attribute SOFT_HLUTNM of \o_z2_OBUF[0]_inst_i_1\ : label is "soft_lutpair13";
+  attribute SOFT_HLUTNM of \o_z2_OBUF[1]_inst_i_1\ : label is "soft_lutpair13";
+  attribute SOFT_HLUTNM of \o_z2_OBUF[2]_inst_i_1\ : label is "soft_lutpair14";
+  attribute SOFT_HLUTNM of \o_z2_OBUF[3]_inst_i_1\ : label is "soft_lutpair14";
+  attribute SOFT_HLUTNM of \o_z2_OBUF[4]_inst_i_1\ : label is "soft_lutpair15";
+  attribute SOFT_HLUTNM of \o_z2_OBUF[5]_inst_i_1\ : label is "soft_lutpair15";
+  attribute SOFT_HLUTNM of \o_z2_OBUF[6]_inst_i_1\ : label is "soft_lutpair16";
+  attribute SOFT_HLUTNM of \o_z2_OBUF[7]_inst_i_1\ : label is "soft_lutpair16";
+  attribute SOFT_HLUTNM of \o_z3_OBUF[0]_inst_i_1\ : label is "soft_lutpair17";
+  attribute SOFT_HLUTNM of \o_z3_OBUF[1]_inst_i_1\ : label is "soft_lutpair17";
+  attribute SOFT_HLUTNM of \o_z3_OBUF[2]_inst_i_1\ : label is "soft_lutpair18";
+  attribute SOFT_HLUTNM of \o_z3_OBUF[3]_inst_i_1\ : label is "soft_lutpair18";
+  attribute SOFT_HLUTNM of \o_z3_OBUF[4]_inst_i_1\ : label is "soft_lutpair19";
+  attribute SOFT_HLUTNM of \o_z3_OBUF[5]_inst_i_1\ : label is "soft_lutpair19";
+  attribute SOFT_HLUTNM of \o_z3_OBUF[6]_inst_i_1\ : label is "soft_lutpair20";
+  attribute SOFT_HLUTNM of \o_z3_OBUF[7]_inst_i_1\ : label is "soft_lutpair20";
 begin
-  \FSM_sequential_curr_state_reg[1]_0\(1 downto 0) <= \^fsm_sequential_curr_state_reg[1]_0\(1 downto 0);
+  \delta_function.REGA_reg[1]_0\(1 downto 0) <= \^delta_function.rega_reg[1]_0\(1 downto 0);
   io_mux_out_sync_OBUF <= \^io_mux_out_sync_obuf\;
   io_my_done_OBUF <= \^io_my_done_obuf\;
   io_reg_out_sync_OBUF <= \^io_reg_out_sync_obuf\;
   io_reg_rst_OBUF <= \^io_reg_rst_obuf\;
-\A_reg[0]\: unisim.vcomponents.LDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      CLR => '0',
-      D => \A_reg[0]_i_1_n_0\,
-      G => \A_reg[0]_i_2_n_0\,
-      GE => '1',
-      Q => \^fsm_sequential_curr_state_reg[1]_0\(0)
-    );
-\A_reg[0]_i_1\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"8"
-    )
-        port map (
-      I0 => \curr_state__0\(0),
-      I1 => D(0),
-      O => \A_reg[0]_i_1_n_0\
-    );
-\A_reg[0]_i_2\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      I1 => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      O => \A_reg[0]_i_2_n_0\
-    );
-\A_reg[1]\: unisim.vcomponents.LDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      CLR => '0',
-      D => \A_reg[1]_i_1_n_0\,
-      G => \A_reg[1]_i_2_n_0\,
-      GE => '1',
-      Q => \^fsm_sequential_curr_state_reg[1]_0\(1)
-    );
-\A_reg[1]_i_1\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"8"
-    )
-        port map (
-      I0 => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      I1 => D(0),
-      O => \A_reg[1]_i_1_n_0\
-    );
-\A_reg[1]_i_2\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => \curr_state__0\(0),
-      I1 => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      O => \A_reg[1]_i_2_n_0\
-    );
-DONE_reg: unisim.vcomponents.LDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      CLR => '0',
-      D => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      G => DONE_reg_i_1_n_0,
-      GE => '1',
-      Q => \^io_my_done_obuf\
-    );
-DONE_reg_i_1: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"81"
-    )
-        port map (
-      I0 => \curr_state__0\(0),
-      I1 => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      I2 => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      O => DONE_reg_i_1_n_0
-    );
 \FSM_sequential_curr_state[0]_i_1\: unisim.vcomponents.LUT1
     generic map(
       INIT => X"1"
@@ -238,7 +121,7 @@ DONE_reg_i_1: unisim.vcomponents.LUT3
     )
         port map (
       I0 => \curr_state__0\(0),
-      I1 => \FSM_sequential_curr_state_reg_n_0_[1]\,
+      I1 => \curr_state__0\(1),
       O => \curr_state__0__0\(1)
     );
 \FSM_sequential_curr_state[2]_i_1\: unisim.vcomponents.LUT3
@@ -246,9 +129,9 @@ DONE_reg_i_1: unisim.vcomponents.LUT3
       INIT => X"78"
     )
         port map (
-      I0 => \FSM_sequential_curr_state_reg_n_0_[1]\,
+      I0 => \curr_state__0\(1),
       I1 => \curr_state__0\(0),
-      I2 => \FSM_sequential_curr_state_reg_n_0_[2]\,
+      I2 => \curr_state__0\(2),
       O => \curr_state__0__0\(2)
     );
 \FSM_sequential_curr_state_reg[0]\: unisim.vcomponents.FDCE
@@ -258,7 +141,7 @@ DONE_reg_i_1: unisim.vcomponents.LUT3
         port map (
       C => CLK,
       CE => curr_state_n_0,
-      CLR => AR(0),
+      CLR => i_rst_IBUF,
       D => \curr_state__0__0\(0),
       Q => \curr_state__0\(0)
     );
@@ -269,9 +152,9 @@ DONE_reg_i_1: unisim.vcomponents.LUT3
         port map (
       C => CLK,
       CE => curr_state_n_0,
-      CLR => AR(0),
+      CLR => i_rst_IBUF,
       D => \curr_state__0__0\(1),
-      Q => \FSM_sequential_curr_state_reg_n_0_[1]\
+      Q => \curr_state__0\(1)
     );
 \FSM_sequential_curr_state_reg[2]\: unisim.vcomponents.FDCE
     generic map(
@@ -280,59 +163,27 @@ DONE_reg_i_1: unisim.vcomponents.LUT3
         port map (
       C => CLK,
       CE => curr_state_n_0,
-      CLR => AR(0),
+      CLR => i_rst_IBUF,
       D => \curr_state__0__0\(2),
-      Q => \FSM_sequential_curr_state_reg_n_0_[2]\
+      Q => \curr_state__0\(2)
     );
 MEM_EN: unisim.vcomponents.LUT3
     generic map(
-      INIT => X"41"
+      INIT => X"A8"
     )
         port map (
-      I0 => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      I1 => \FSM_sequential_curr_state_reg_n_0_[2]\,
+      I0 => \curr_state__0\(2),
+      I1 => \curr_state__0\(1),
       I2 => \curr_state__0\(0),
-      O => MEM_EN_n_0
-    );
-MEM_EN_reg: unisim.vcomponents.LDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      CLR => '0',
-      D => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      G => MEM_EN_n_0,
-      GE => '1',
-      Q => o_mem_en_OBUF
-    );
-MUX_OUT_SYNC_reg: unisim.vcomponents.LDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      CLR => '0',
-      D => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      G => MUX_OUT_SYNC_reg_i_1_n_0,
-      GE => '1',
-      Q => \^io_mux_out_sync_obuf\
-    );
-MUX_OUT_SYNC_reg_i_1: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"41"
-    )
-        port map (
-      I0 => \curr_state__0\(0),
-      I1 => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      I2 => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      O => MUX_OUT_SYNC_reg_i_1_n_0
+      O => o_mem_en_OBUF
     );
 \REG0[7]_i_1\: unisim.vcomponents.LUT3
     generic map(
       INIT => X"10"
     )
         port map (
-      I0 => \^fsm_sequential_curr_state_reg[1]_0\(0),
-      I1 => \^fsm_sequential_curr_state_reg[1]_0\(1),
+      I0 => \^delta_function.rega_reg[1]_0\(0),
+      I1 => \^delta_function.rega_reg[1]_0\(1),
       I2 => \^io_mux_out_sync_obuf\,
       O => E(0)
     );
@@ -341,30 +192,30 @@ MUX_OUT_SYNC_reg_i_1: unisim.vcomponents.LUT3
       INIT => X"40"
     )
         port map (
-      I0 => \^fsm_sequential_curr_state_reg[1]_0\(0),
-      I1 => \^fsm_sequential_curr_state_reg[1]_0\(1),
+      I0 => \^delta_function.rega_reg[1]_0\(0),
+      I1 => \^delta_function.rega_reg[1]_0\(1),
       I2 => \^io_mux_out_sync_obuf\,
-      O => \FSM_sequential_curr_state_reg[2]_0\(0)
+      O => \delta_function.REGA_reg[0]_0\(0)
     );
 \REG2[7]_i_1\: unisim.vcomponents.LUT3
     generic map(
       INIT => X"20"
     )
         port map (
-      I0 => \^fsm_sequential_curr_state_reg[1]_0\(0),
-      I1 => \^fsm_sequential_curr_state_reg[1]_0\(1),
+      I0 => \^delta_function.rega_reg[1]_0\(0),
+      I1 => \^delta_function.rega_reg[1]_0\(1),
       I2 => \^io_mux_out_sync_obuf\,
-      O => \FSM_sequential_curr_state_reg[2]_2\(0)
+      O => \delta_function.REGA_reg[0]_2\(0)
     );
 \REG3[7]_i_1\: unisim.vcomponents.LUT3
     generic map(
       INIT => X"80"
     )
         port map (
-      I0 => \^fsm_sequential_curr_state_reg[1]_0\(0),
-      I1 => \^fsm_sequential_curr_state_reg[1]_0\(1),
+      I0 => \^delta_function.rega_reg[1]_0\(0),
+      I1 => \^delta_function.rega_reg[1]_0\(1),
       I2 => \^io_mux_out_sync_obuf\,
-      O => \FSM_sequential_curr_state_reg[2]_1\(0)
+      O => \delta_function.REGA_reg[0]_1\(0)
     );
 \REG[15]_i_1\: unisim.vcomponents.LUT2
     generic map(
@@ -373,99 +224,110 @@ MUX_OUT_SYNC_reg_i_1: unisim.vcomponents.LUT3
         port map (
       I0 => \^io_reg_out_sync_obuf\,
       I1 => i_start_IBUF,
-      O => \FSM_sequential_curr_state_reg[1]_1\(0)
+      O => \FSM_sequential_curr_state_reg[2]_0\(0)
     );
 \REG[15]_i_2\: unisim.vcomponents.LUT2
     generic map(
       INIT => X"E"
     )
         port map (
-      I0 => AR(0),
+      I0 => i_rst_IBUF,
       I1 => \^io_reg_rst_obuf\,
       O => i_rst
-    );
-REG_OUT_SYNC_reg: unisim.vcomponents.LDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      CLR => '0',
-      D => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      G => REG_OUT_SYNC_reg_i_1_n_0,
-      GE => '1',
-      Q => \^io_reg_out_sync_obuf\
-    );
-REG_OUT_SYNC_reg_i_1: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"15"
-    )
-        port map (
-      I0 => \curr_state__0\(0),
-      I1 => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      I2 => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      O => REG_OUT_SYNC_reg_i_1_n_0
-    );
-REG_RST: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"15"
-    )
-        port map (
-      I0 => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      I1 => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      I2 => \curr_state__0\(0),
-      O => REG_RST_n_0
-    );
-REG_RST_reg: unisim.vcomponents.LDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      CLR => '0',
-      D => REG_RST_reg_i_1_n_0,
-      G => REG_RST_n_0,
-      GE => '1',
-      Q => \^io_reg_rst_obuf\
-    );
-REG_RST_reg_i_1: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => \curr_state__0\(0),
-      I1 => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      O => REG_RST_reg_i_1_n_0
-    );
-W_TO_REG_reg: unisim.vcomponents.LDCE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      CLR => '0',
-      D => D(0),
-      G => W_TO_REG_reg_i_1_n_0,
-      GE => '1',
-      Q => io_w_to_reg_OBUF
-    );
-W_TO_REG_reg_i_1: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"02"
-    )
-        port map (
-      I0 => \FSM_sequential_curr_state_reg_n_0_[1]\,
-      I1 => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      I2 => \curr_state__0\(0),
-      O => W_TO_REG_reg_i_1_n_0
     );
 curr_state: unisim.vcomponents.LUT4
     generic map(
       INIT => X"BFFE"
     )
         port map (
-      I0 => \FSM_sequential_curr_state_reg_n_0_[2]\,
-      I1 => \FSM_sequential_curr_state_reg_n_0_[1]\,
+      I0 => \curr_state__0\(2),
+      I1 => \curr_state__0\(1),
       I2 => i_start_IBUF,
       I3 => \curr_state__0\(0),
       O => curr_state_n_0
+    );
+\delta_function.REGA[0]_i_1\: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"00000004"
+    )
+        port map (
+      I0 => \curr_state__0\(1),
+      I1 => i_start_IBUF,
+      I2 => \curr_state__0\(2),
+      I3 => \curr_state__0\(0),
+      I4 => i_rst_IBUF,
+      O => \delta_function.REGA[0]_i_1_n_0\
+    );
+\delta_function.REGA[1]_i_1\: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"0010"
+    )
+        port map (
+      I0 => \curr_state__0\(1),
+      I1 => \curr_state__0\(2),
+      I2 => \curr_state__0\(0),
+      I3 => i_rst_IBUF,
+      O => \delta_function.REGA[1]_i_1_n_0\
+    );
+\delta_function.REGA_reg[0]\: unisim.vcomponents.FDRE
+    generic map(
+      INIT => '0'
+    )
+        port map (
+      C => CLK,
+      CE => \delta_function.REGA[0]_i_1_n_0\,
+      D => D(0),
+      Q => \^delta_function.rega_reg[1]_0\(0),
+      R => '0'
+    );
+\delta_function.REGA_reg[1]\: unisim.vcomponents.FDRE
+    generic map(
+      INIT => '0'
+    )
+        port map (
+      C => CLK,
+      CE => \delta_function.REGA[1]_i_1_n_0\,
+      D => D(0),
+      Q => \^delta_function.rega_reg[1]_0\(1),
+      R => '0'
+    );
+io_mux_out_sync_OBUF_inst_i_1: unisim.vcomponents.LUT2
+    generic map(
+      INIT => X"8"
+    )
+        port map (
+      I0 => \curr_state__0\(1),
+      I1 => \curr_state__0\(2),
+      O => \^io_mux_out_sync_obuf\
+    );
+io_reg_out_sync_OBUF_inst_i_1: unisim.vcomponents.LUT2
+    generic map(
+      INIT => X"4"
+    )
+        port map (
+      I0 => \curr_state__0\(2),
+      I1 => \curr_state__0\(1),
+      O => \^io_reg_out_sync_obuf\
+    );
+io_reg_rst_OBUF_inst_i_1: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"01"
+    )
+        port map (
+      I0 => \curr_state__0\(2),
+      I1 => \curr_state__0\(0),
+      I2 => \curr_state__0\(1),
+      O => \^io_reg_rst_obuf\
+    );
+o_done_OBUF_inst_i_1: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"80"
+    )
+        port map (
+      I0 => \curr_state__0\(2),
+      I1 => \curr_state__0\(0),
+      I2 => \curr_state__0\(1),
+      O => \^io_my_done_obuf\
     );
 \o_z0_OBUF[0]_inst_i_1\: unisim.vcomponents.LUT2
     generic map(
@@ -1345,7 +1207,6 @@ entity project_reti_logiche is
     i_mem_data : in STD_LOGIC_VECTOR ( 7 downto 0 );
     o_mem_we : out STD_LOGIC;
     o_mem_en : out STD_LOGIC;
-    io_w_to_reg : inout STD_LOGIC;
     io_fsm_a : inout STD_LOGIC_VECTOR ( 1 downto 0 );
     io_mux_out_sync : inout STD_LOGIC;
     io_reg_out_sync : inout STD_LOGIC;
@@ -1365,8 +1226,8 @@ architecture STRUCTURE of project_reti_logiche is
   signal REG20 : STD_LOGIC;
   signal REG3 : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal REG30 : STD_LOGIC;
-  signal fsm_map_n_45 : STD_LOGIC;
-  signal fsm_map_n_6 : STD_LOGIC;
+  signal fsm_map_n_0 : STD_LOGIC;
+  signal fsm_map_n_44 : STD_LOGIC;
   signal i_clk_IBUF : STD_LOGIC;
   signal i_clk_IBUF_BUFG : STD_LOGIC;
   signal i_mem_data_IBUF : STD_LOGIC_VECTOR ( 7 downto 0 );
@@ -1378,7 +1239,6 @@ architecture STRUCTURE of project_reti_logiche is
   signal io_my_done_OBUF : STD_LOGIC;
   signal io_reg_out_sync_OBUF : STD_LOGIC;
   signal io_reg_rst_OBUF : STD_LOGIC;
-  signal io_w_to_reg_OBUF : STD_LOGIC;
   signal o_mem_addr_OBUF : STD_LOGIC_VECTOR ( 15 downto 0 );
   signal o_mem_en_OBUF : STD_LOGIC;
   signal o_z0_OBUF : STD_LOGIC_VECTOR ( 7 downto 0 );
@@ -1388,23 +1248,22 @@ architecture STRUCTURE of project_reti_logiche is
 begin
 fsm_map: entity work.FSM
      port map (
-      AR(0) => i_rst_IBUF,
       CLK => i_clk_IBUF_BUFG,
       D(0) => i_w_IBUF,
       E(0) => REG00,
-      \FSM_sequential_curr_state_reg[1]_0\(1 downto 0) => io_fsm_a_IBUF(1 downto 0),
-      \FSM_sequential_curr_state_reg[1]_1\(0) => fsm_map_n_45,
-      \FSM_sequential_curr_state_reg[2]_0\(0) => REG10,
-      \FSM_sequential_curr_state_reg[2]_1\(0) => REG30,
-      \FSM_sequential_curr_state_reg[2]_2\(0) => REG20,
+      \FSM_sequential_curr_state_reg[2]_0\(0) => fsm_map_n_44,
       Q(7 downto 0) => REG0(7 downto 0),
-      i_rst => fsm_map_n_6,
+      \delta_function.REGA_reg[0]_0\(0) => REG10,
+      \delta_function.REGA_reg[0]_1\(0) => REG30,
+      \delta_function.REGA_reg[0]_2\(0) => REG20,
+      \delta_function.REGA_reg[1]_0\(1 downto 0) => io_fsm_a_IBUF(1 downto 0),
+      i_rst => fsm_map_n_0,
+      i_rst_IBUF => i_rst_IBUF,
       i_start_IBUF => i_start_IBUF,
       io_mux_out_sync_OBUF => io_mux_out_sync_OBUF,
       io_my_done_OBUF => io_my_done_OBUF,
       io_reg_out_sync_OBUF => io_reg_out_sync_OBUF,
       io_reg_rst_OBUF => io_reg_rst_OBUF,
-      io_w_to_reg_OBUF => io_w_to_reg_OBUF,
       o_mem_en_OBUF => o_mem_en_OBUF,
       o_z0_OBUF(7 downto 0) => o_z0_OBUF(7 downto 0),
       \o_z1[7]\(7 downto 0) => REG1(7 downto 0),
@@ -1544,11 +1403,6 @@ io_reg_rst_OBUF_inst: unisim.vcomponents.OBUF
      port map (
       I => io_reg_rst_OBUF,
       O => io_reg_rst
-    );
-io_w_to_reg_OBUF_inst: unisim.vcomponents.OBUF
-     port map (
-      I => io_w_to_reg_OBUF,
-      O => io_w_to_reg
     );
 mux_map: entity work.demux
      port map (
@@ -1823,8 +1677,8 @@ reg_in_map: entity work.Reg_In
      port map (
       CLK => i_clk_IBUF_BUFG,
       D(0) => i_w_IBUF,
-      E(0) => fsm_map_n_45,
+      E(0) => fsm_map_n_44,
       Q(15 downto 0) => o_mem_addr_OBUF(15 downto 0),
-      \REG_reg[0]_0\ => fsm_map_n_6
+      \REG_reg[0]_0\ => fsm_map_n_0
     );
 end STRUCTURE;

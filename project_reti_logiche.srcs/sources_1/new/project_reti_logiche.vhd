@@ -1,11 +1,11 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Politecnico di Milano
+-- Engineer: Brunetta Giacomo, Carminati Gabriele
 -- 
 -- Create Date: 02/23/2023 03:05:19 PM
 -- Design Name: 
 -- Module Name: project_reti_logiche - Behavioral
--- Project Name: 
+-- Project Name: Progetto Reti Logiche AA 22/23
 -- Target Devices: 
 -- Tool Versions: 
 -- Description: 
@@ -21,15 +21,6 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity project_reti_logiche is
     port (
@@ -47,12 +38,11 @@ entity project_reti_logiche is
         o_mem_we : out std_logic := '0';
         o_mem_en : out std_logic;
         
-        io_reg_a_enable: inout std_logic;
+        io_fsm_a : inout std_logic_vector(1 downto 0);
         io_mux_out_sync : inout std_logic;
         io_reg_out_sync : inout std_logic;
         io_my_done : inout std_logic;
-        io_reg_rst : inout std_logic;
-        io_reg_a_out : inout std_logic_vector (1 downto 0)
+        io_reg_rst : inout std_logic
         );
 end project_reti_logiche;
 
@@ -60,15 +50,15 @@ architecture Behavioral of project_reti_logiche is
 component FSM is
     port(
         START: in std_logic; 
+        W: in std_logic; 
         CLOCK: in std_logic; 
         RST: in std_logic;
         REG_RST: out std_logic;
         MEM_EN: out std_logic;
-        REG_A_ENABLE: out std_logic;
-        MUX_OUT_SYNC: out std_logic; -- usato per comandare al mux di leggere il dato dalla memoria solo quando la fsm sta nello stato giusto
-        REG_OUT_SYNC: out std_logic; -- usato per dire al reg in quando leggere l'input
-        DONE: out std_logic
-        );
+        A: inout std_logic_vector(1 downto 0); --bro?
+        MUX_OUT_SYNC: out std_logic;
+        REG_OUT_SYNC: out std_logic;
+        DONE: out std_logic);
 end component;
 
 component Reg_In is
@@ -97,27 +87,18 @@ component demux is
     );
 end component;
 
-component Reg_A is
-    port(
-        D: in std_logic; 
-        CLOCK: in std_logic;
-        RST: in std_logic;
-        ENABLE: in std_logic;
-        START: in std_logic;
-        Q: out std_logic_vector(1 downto 0));
-end component;
-
 begin
     -- fsm port map
     fsm_map : FSM
     port map (
         START => i_start,
+        W => i_w,
         CLOCK => i_clk,
         RST => i_rst,
         REG_RST => io_reg_rst,
         DONE => io_my_done,
         MEM_EN => o_mem_en,
-        REG_A_ENABLE => io_reg_a_enable,
+        A => io_fsm_a,
         MUX_OUT_SYNC => io_mux_out_sync,
         REG_OUT_SYNC => io_reg_out_sync
     );
@@ -137,7 +118,7 @@ begin
     -- mux port map
     mux_map : demux
     port map (
-        A => io_reg_a_out,
+        A => io_fsm_a,
         I => i_mem_data,
         CLOCK => i_clk,
         FSM_SYNC => io_mux_out_sync,
@@ -147,16 +128,6 @@ begin
         OUT1 => o_z1,
         OUT2 => o_z2,
         OUT3 => o_z3
-    );
-    
-    reg_a_map : REG_A
-    port map(
-        D => i_w,
-        CLOCK => i_clk,
-        RST => i_rst,
-        ENABLE => io_reg_a_enable,
-        START => i_start,
-        Q => io_reg_a_out
     );
     
     o_done <= io_my_done;
@@ -187,49 +158,15 @@ begin
     begin
         if(RST = '1') then            
             REG := (others => '0');
-            -- Q <= "0000000000000000";
         elsif(FSM_RST = '1') then            
             REG := (others => '0');
         elsif(FSM_SYNC = '1' and START_SYNC = '1' and CLOCK'event and CLOCK = '1') then
 			REG := REG(14 downto 0) & D;
-			-- Q <= Q(14 downto 0) & D;
 		end if;
 		Q <= REG;
     end process;
 end RSP;
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
-entity Reg_A is
-    port(
-    D: in std_logic; 
-    CLOCK: in std_logic;
-    RST: in std_logic; 
-    ENABLE: in std_logic;
-    START: in std_logic;
-    Q: out std_logic_vector(1 downto 0));
-end Reg_A;
-
-architecture RSP of Reg_A is
-begin
-    process(CLOCK, RST) --scorrimento ed inserimento
-        variable REG: std_logic_vector(1 downto 0) := (others => '0');
-    begin
-        if(RST = '1') then            
-            REG := (others => '0');
-        elsif( -- condizione da sistemare
-        --START = '1' and 
-        --ENABLE = '1' and 
-        CLOCK'event and CLOCK = '1') then
-			REG(1) := REG(0);
-			REG(0):= D;
-		end if;
-		Q <= REG;
-    end process;
-end RSP;
-
--- ma che cazzo di senso ha che devo copiare la libreira sopra ogni entity se voglio usare gli std_logic?
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -237,11 +174,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity FSM is
     port(
         START: in std_logic; 
+        W: in std_logic; 
         CLOCK: in std_logic; 
         RST: in std_logic;
         REG_RST: out std_logic;
         MEM_EN: out std_logic;
-        REG_A_ENABLE: out std_logic;
+        A: inout std_logic_vector(1 downto 0);
         MUX_OUT_SYNC: out std_logic; -- usato per comandare al mux di leggere il dato dalla memoria solo quando la fsm sta nello stato giusto
         REG_OUT_SYNC: out std_logic; -- usato per dire al reg in quando leggere l'input
         DONE: out std_logic);
@@ -260,21 +198,23 @@ architecture FSM_arch of FSM is
     signal curr_state : S;
 begin
     
-    -- delta function = funzione per le transizioni di stato
+    -- delta function = funzione per le transizioni di stato (ed A)
     delta_function : process(CLOCK, RST)
+    variable REGA: std_logic_vector(1 downto 0);
     begin
         if (RST = '1') then
             curr_state <= S0;
-            -- REG_RST <= RST;
         else
             if (CLOCK'event and CLOCK = '1') then
                 case curr_state is
                     when S0 =>
                         if (START = '1') then
                             curr_state <= S1;
+                            REGA(0) := W;
                         end if;
                     when S1 =>
                         curr_state <= S2;
+                        REGA(1) := W;
                     when S2 =>
                         curr_state <= S3;
                     when S3 =>
@@ -292,6 +232,7 @@ begin
                 end case;
             end if;                      
         end if;
+        A <= REGA;
     end process;
     
     -- lambda function = funzione per gestire le uscite
@@ -304,63 +245,48 @@ begin
                 MUX_OUT_SYNC <= '0';
                 REG_OUT_SYNC <= '0';
                 REG_RST <= '1';
-                REG_A_ENABLE <= '0';
             when S1 =>
                 REG_RST <= '0';
                 DONE <= '0';
                 MEM_EN <= '0';
                 MUX_OUT_SYNC <= '0';
                 REG_OUT_SYNC <= '0';
-                REG_A_ENABLE <= '1';
-                
             when S2 =>
                 REG_RST <= '0';
                 REG_OUT_SYNC <= '1';
                 DONE <= '0';
                 MEM_EN <= '0';
                 MUX_OUT_SYNC <= '0';
-                REG_A_ENABLE <= '1';
-  
             when S3 => 
                 REG_RST <= '0';
                 REG_OUT_SYNC <= '1';
                 DONE <= '0';
                 MEM_EN <= '0';
                 MUX_OUT_SYNC <= '0';
-                REG_A_ENABLE <= '0';
-                
             when S4 =>
                 REG_OUT_SYNC <= '0';
                 REG_RST <= '0';
                 DONE <= '0';
                 MEM_EN <= '0';
                 MUX_OUT_SYNC <= '0';
-                REG_A_ENABLE <= '0';
- 
             when S5 =>
                 MEM_EN <= '1';
                 REG_OUT_SYNC <= '0';
                 REG_RST <= '0';
                 DONE <= '0';
                 MUX_OUT_SYNC <= '0';
-                REG_A_ENABLE <= '0';
-
             when S6 =>
                 MUX_OUT_SYNC <= '1';
                 MEM_EN <= '1';
                 REG_OUT_SYNC <= '0';
                 REG_RST <= '0';
                 DONE <= '0';
-                REG_A_ENABLE <= '0';
-
             when S7 =>
                 DONE <= '1';
                 MUX_OUT_SYNC <= '1';
                 MEM_EN <= '1';
                 REG_OUT_SYNC <= '0';
                 REG_RST <= '0';
-                REG_A_ENABLE <= '0';
-
         end case;
     end process;
         
