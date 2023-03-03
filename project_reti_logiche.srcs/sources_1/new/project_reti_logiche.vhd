@@ -103,6 +103,7 @@ component Reg_A is
         CLOCK: in std_logic;
         RST: in std_logic;
         ENABLE: in std_logic;
+        START: in std_logic;
         Q: out std_logic_vector(1 downto 0));
 end component;
 
@@ -154,6 +155,7 @@ begin
         CLOCK => i_clk,
         RST => i_rst,
         ENABLE => io_reg_a_enable,
+        START => i_start,
         Q => io_reg_a_out
     );
     
@@ -205,6 +207,7 @@ entity Reg_A is
     CLOCK: in std_logic;
     RST: in std_logic; 
     ENABLE: in std_logic;
+    START: in std_logic;
     Q: out std_logic_vector(1 downto 0));
 end Reg_A;
 
@@ -215,9 +218,12 @@ begin
     begin
         if(RST = '1') then            
             REG := (others => '0');
-        elsif(ENABLE = '1' and CLOCK'event and CLOCK = '1') then
+        elsif( -- condizione da sistemare
+        --START = '1' and 
+        --ENABLE = '1' and 
+        CLOCK'event and CLOCK = '1') then
 			REG(1) := REG(0);
-			REG(0):= ;
+			REG(0):= D;
 		end if;
 		Q <= REG;
     end process;
@@ -259,7 +265,7 @@ begin
     begin
         if (RST = '1') then
             curr_state <= S0;
-            --REG_RST <= RST;
+            -- REG_RST <= RST;
         else
             if (CLOCK'event and CLOCK = '1') then
                 case curr_state is
