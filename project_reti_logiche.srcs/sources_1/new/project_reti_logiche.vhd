@@ -1,11 +1,11 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Politecnico di Milano
+-- Engineer: Brunetta Giacomo, Carminati Gabriele
 -- 
 -- Create Date: 02/23/2023 03:05:19 PM
 -- Design Name: 
 -- Module Name: project_reti_logiche - Behavioral
--- Project Name: 
+-- Project Name: Progetto Reti Logiche AA 22/23
 -- Target Devices: 
 -- Tool Versions: 
 -- Description: 
@@ -21,15 +21,6 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity project_reti_logiche is
     port (
@@ -96,7 +87,6 @@ component demux is
     );
 end component;
 
---TODO: mappare le entity alle porte
 begin
     -- fsm port map
     fsm_map : FSM
@@ -168,18 +158,15 @@ begin
     begin
         if(RST = '1') then            
             REG := (others => '0');
-            -- Q <= "0000000000000000";
         elsif(FSM_RST = '1') then            
             REG := (others => '0');
         elsif(FSM_SYNC = '1' and START_SYNC = '1' and CLOCK'event and CLOCK = '1') then
 			REG := REG(14 downto 0) & D;
-			-- Q <= Q(14 downto 0) & D;
 		end if;
 		Q <= REG;
     end process;
 end RSP;
 
--- ma che cazzo di senso ha che devo copiare la libreira sopra ogni entity se voglio usare gli std_logic?
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -211,7 +198,7 @@ architecture FSM_arch of FSM is
     signal curr_state : S;
 begin
     
-    -- delta function = funzione per le transizioni di stato
+    -- delta function = funzione per le transizioni di stato (ed A)
     delta_function : process(CLOCK, RST)
     variable REGA: std_logic_vector(1 downto 0);
     begin
@@ -250,9 +237,7 @@ begin
     
     -- lambda function = funzione per gestire le uscite
     lambda_function : process(curr_state)
-    --variable REG: std_logic;
     begin
-        --REG := W;
         case curr_state is
             when S0 =>
                 DONE <= '0';
@@ -260,17 +245,14 @@ begin
                 MUX_OUT_SYNC <= '0';
                 REG_OUT_SYNC <= '0';
                 REG_RST <= '1';
-                --A <= "00";
             when S1 =>
                 REG_RST <= '0';
-                --A(0) <= REG;
                 DONE <= '0';
                 MEM_EN <= '0';
                 MUX_OUT_SYNC <= '0';
                 REG_OUT_SYNC <= '0';
             when S2 =>
                 REG_RST <= '0';
-                --A(1) <= REG;
                 REG_OUT_SYNC <= '1';
                 DONE <= '0';
                 MEM_EN <= '0';
