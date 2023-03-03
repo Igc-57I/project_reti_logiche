@@ -16,6 +16,7 @@ Compiling package ieee.std_logic_unsigned
 Compiling architecture fsm_arch of entity xil_defaultlib.FSM [fsm_default]
 Compiling architecture rsp of entity xil_defaultlib.Reg_In [reg_in_default]
 Compiling architecture dmx_arc of entity xil_defaultlib.demux [demux_default]
+Compiling architecture rsp of entity xil_defaultlib.Reg_A [reg_a_default]
 Compiling architecture behavioral of entity xil_defaultlib.project_reti_logiche [project_reti_logiche_default]
 Compiling architecture tb_many of entity xil_defaultlib.tb_many
 Built simulation snapshot tb_many_behav
