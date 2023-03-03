@@ -1,4 +1,4 @@
 Time resolution is 1 ps
-Note: Test completed
-Time: 7600100 ps  Iteration: 4  Process: /cleverRst_tb/test  File: C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.srcs/sim_edo/tbedo2_CleverResets.vhd
-$stop called at time : 7600100 ps : File "C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.srcs/sim_edo/tbedo2_CleverResets.vhd" Line 207
+Note: Dumb test cases completed
+Time: 282 ns  Iteration: 0  Process: /dumb_tb/test  File: C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_edo/tbedo1_Dumb.vhd
+$stop called at time : 282 ns : File "C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_edo/tbedo1_Dumb.vhd" Line 142

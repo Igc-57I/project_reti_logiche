@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"tb_middleRST_func_synth.vhd" \
+"../../../../../project_reti_logiche.srcs/sim_matteo/tbmatteo1_middleRST.vhd" \
+
+# Do not sort compile order
+nosort

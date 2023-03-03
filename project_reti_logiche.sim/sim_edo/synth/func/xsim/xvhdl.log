@@ -1,5 +1,7 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.sim/sim_edo/synth/func/xsim/cleverRst_tb_func_synth.vhd" into library xil_defaultlib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.sim/sim_edo/synth/func/xsim/dumb_tb_func_synth.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'FSM'
 INFO: [VRFC 10-3107] analyzing entity 'Reg_In'
 INFO: [VRFC 10-3107] analyzing entity 'demux'
 INFO: [VRFC 10-3107] analyzing entity 'project_reti_logiche'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_edo/tbedo1_Dumb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'dumb_tb'
