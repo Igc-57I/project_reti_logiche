@@ -1,10 +1,10 @@
 -- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2022.2 (win64) Build 3671981 Fri Oct 14 05:00:03 MDT 2022
--- Date        : Fri Mar  3 22:55:46 2023
--- Host        : DESKTOP-D997S7A running 64-bit major release  (build 9200)
+-- Date        : Fri Mar 10 10:36:36 2023
+-- Host        : JackB_Laptop running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -mode funcsim -nolib -force -file
---               C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.sim/sim_matteo/synth/func/xsim/tb_middleRST_func_synth.vhd
+--               C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.sim/sim_matteo/synth/func/xsim/tb_middleRST_func_synth.vhd
 -- Design      : project_reti_logiche
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.

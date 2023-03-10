@@ -2,7 +2,5 @@
 2020.2
 Oct 14 2022
 05:20:55
-C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.sim/sim_matteo/synth/func/xsim/tb_middleRST_func_synth.vhd,1677880546,vhdl,,,,demux;fsm;project_reti_logiche;reg_in,,,,,,,,
-C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_matteo/tbmatteo1_middleRST.vhd,1677880070,vhdl,,,,tb_middlerst,,,,,,,,
-C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_matteo/tbmatteo2_2mix18ck.vhd,1677880070,vhdl,,,,tb_2mix18ck,,,,,,,,
-C:/Users/crmgr/Desktop/project_reti_logiche/project_reti_logiche.srcs/sim_matteo/tbmatteo3_many.vhd,1677880070,vhdl,,,,tb_many,,,,,,,,
+C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.sim/sim_matteo/synth/func/xsim/tb_middleRST_func_synth.vhd,1678440996,vhdl,,,,demux;fsm;project_reti_logiche;reg_in,,,,,,,,
+C:/Users/jackb/Documents/GitHub/project_reti_logiche/project_reti_logiche.srcs/sim_matteo/tbmatteo1_middleRST.vhd,1677871935,vhdl,,,,tb_middlerst,,,,,,,,
